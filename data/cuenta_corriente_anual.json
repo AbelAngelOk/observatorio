@@ -1,0 +1,114 @@
+{
+  "indicador": "Saldo de cuenta corriente, acumulado anual",
+  "unidad": "millones de USD",
+  "metodologia": "Suma de los 4 trimestres del ano (o cifra anual oficial de INDEC cuando esta disponible).",
+  "fuente": "Balanza de pagos",
+  "tipo_acceso_fuente": "scraping",
+  "datos": [
+    {
+      "fecha": "2006-12-31",
+      "valor": 6498.802520204537,
+      "provisorio": false
+    },
+    {
+      "fecha": "2007-12-31",
+      "valor": 6048.537892886692,
+      "provisorio": false
+    },
+    {
+      "fecha": "2008-12-31",
+      "valor": 5421.206328610086,
+      "provisorio": false
+    },
+    {
+      "fecha": "2009-12-31",
+      "valor": 7254.115683937023,
+      "provisorio": false
+    },
+    {
+      "fecha": "2010-12-31",
+      "valor": -1622.9958712506889,
+      "provisorio": false
+    },
+    {
+      "fecha": "2011-12-31",
+      "valor": -5340.181192395201,
+      "provisorio": false
+    },
+    {
+      "fecha": "2012-12-31",
+      "valor": -2138.0403604329586,
+      "provisorio": false
+    },
+    {
+      "fecha": "2013-12-31",
+      "valor": -13124.373785863289,
+      "provisorio": false
+    },
+    {
+      "fecha": "2014-12-31",
+      "valor": -9179.026266875517,
+      "provisorio": false
+    },
+    {
+      "fecha": "2015-12-31",
+      "valor": -17621.98516820996,
+      "provisorio": false
+    },
+    {
+      "fecha": "2016-12-31",
+      "valor": -15104.786524560115,
+      "provisorio": false
+    },
+    {
+      "fecha": "2017-12-31",
+      "valor": -31151.35175076238,
+      "provisorio": false
+    },
+    {
+      "fecha": "2018-12-31",
+      "valor": -27083.606451057018,
+      "provisorio": false
+    },
+    {
+      "fecha": "2019-12-31",
+      "valor": -3492.4795810842047,
+      "provisorio": false
+    },
+    {
+      "fecha": "2020-12-31",
+      "valor": 2688.362005523114,
+      "provisorio": false
+    },
+    {
+      "fecha": "2021-12-31",
+      "valor": 6624.7851923479975,
+      "provisorio": false
+    },
+    {
+      "fecha": "2022-12-31",
+      "valor": -3964.074915280936,
+      "provisorio": false
+    },
+    {
+      "fecha": "2023-12-31",
+      "valor": -22354.687289560767,
+      "provisorio": false
+    },
+    {
+      "fecha": "2024-12-31",
+      "valor": 5891.4047816786015,
+      "provisorio": false
+    },
+    {
+      "fecha": "2025-12-31",
+      "valor": -7788.125558954493,
+      "provisorio": false
+    },
+    {
+      "fecha": "2026-12-31",
+      "valor": -1650.5258474343727,
+      "provisorio": false
+    }
+  ]
+}

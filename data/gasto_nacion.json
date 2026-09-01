@@ -1,0 +1,24 @@
+{
+  "indicador": "Erogaciones primarias del SPN",
+  "unidad": "miles de millones de ARS",
+  "metodologia": null,
+  "fuente": "Resultado del Sector Publico Nacional",
+  "tipo_acceso_fuente": "scraping",
+  "datos": [
+    {
+      "fecha": "2023-12-31",
+      "valor": 6218.4,
+      "provisorio": true
+    },
+    {
+      "fecha": "2024-12-31",
+      "valor": 11172.2,
+      "provisorio": true
+    },
+    {
+      "fecha": "2026-03-31",
+      "valor": 10911.1,
+      "provisorio": true
+    }
+  ]
+}

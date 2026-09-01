@@ -1,0 +1,59 @@
+{
+  "indicador": "Resultado primario anual, % del PBI",
+  "unidad": "% del PBI",
+  "metodologia": "Cifra anual oficial en % del PBI, distinta de resultado_primario (que es nominal y mensual).",
+  "fuente": "Resultado del Sector Publico Nacional",
+  "tipo_acceso_fuente": "scraping",
+  "datos": [
+    {
+      "fecha": "2016-12-31",
+      "valor": -4.17,
+      "provisorio": false
+    },
+    {
+      "fecha": "2017-12-31",
+      "valor": -3.79,
+      "provisorio": false
+    },
+    {
+      "fecha": "2018-12-31",
+      "valor": -2.3,
+      "provisorio": false
+    },
+    {
+      "fecha": "2019-12-31",
+      "valor": -0.44,
+      "provisorio": false
+    },
+    {
+      "fecha": "2020-12-31",
+      "valor": -6.43,
+      "provisorio": false
+    },
+    {
+      "fecha": "2021-12-31",
+      "valor": -2.12,
+      "provisorio": false
+    },
+    {
+      "fecha": "2022-12-31",
+      "valor": -2.0,
+      "provisorio": false
+    },
+    {
+      "fecha": "2023-12-31",
+      "valor": -2.66,
+      "provisorio": false
+    },
+    {
+      "fecha": "2024-12-31",
+      "valor": 1.78,
+      "provisorio": false
+    },
+    {
+      "fecha": "2025-12-31",
+      "valor": 1.38,
+      "provisorio": false
+    }
+  ]
+}

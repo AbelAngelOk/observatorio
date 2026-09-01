@@ -1,0 +1,119 @@
+{
+  "indicador": "Gasto primario de la Nacion, % del PBI",
+  "unidad": "% del PBI",
+  "metodologia": "CALCULO PROPIO: gasto / PBI del CSV de la Subsecretaria de Presupuesto. Cuantos puntos del PBI consume el Estado nacional.",
+  "fuente": "Serie anual gastos/recursos/PBI",
+  "tipo_acceso_fuente": "csv",
+  "datos": [
+    {
+      "fecha": "2004-12-31",
+      "valor": 13.25,
+      "provisorio": false
+    },
+    {
+      "fecha": "2005-12-31",
+      "valor": 14.91,
+      "provisorio": false
+    },
+    {
+      "fecha": "2006-12-31",
+      "valor": 14.79,
+      "provisorio": false
+    },
+    {
+      "fecha": "2007-12-31",
+      "valor": 15.88,
+      "provisorio": false
+    },
+    {
+      "fecha": "2008-12-31",
+      "valor": 16.79,
+      "provisorio": false
+    },
+    {
+      "fecha": "2009-12-31",
+      "valor": 20.03,
+      "provisorio": false
+    },
+    {
+      "fecha": "2010-12-31",
+      "valor": 19.8,
+      "provisorio": false
+    },
+    {
+      "fecha": "2011-12-31",
+      "valor": 20.68,
+      "provisorio": false
+    },
+    {
+      "fecha": "2012-12-31",
+      "valor": 21.3,
+      "provisorio": false
+    },
+    {
+      "fecha": "2013-12-31",
+      "valor": 22.43,
+      "provisorio": false
+    },
+    {
+      "fecha": "2014-12-31",
+      "valor": 24.77,
+      "provisorio": false
+    },
+    {
+      "fecha": "2015-12-31",
+      "valor": 24.04,
+      "provisorio": false
+    },
+    {
+      "fecha": "2016-12-31",
+      "valor": 25.9,
+      "provisorio": false
+    },
+    {
+      "fecha": "2017-12-31",
+      "valor": 24.09,
+      "provisorio": false
+    },
+    {
+      "fecha": "2018-12-31",
+      "valor": 22.59,
+      "provisorio": false
+    },
+    {
+      "fecha": "2019-12-31",
+      "valor": 22.2,
+      "provisorio": false
+    },
+    {
+      "fecha": "2020-12-31",
+      "valor": 25.48,
+      "provisorio": false
+    },
+    {
+      "fecha": "2021-12-31",
+      "valor": 23.26,
+      "provisorio": false
+    },
+    {
+      "fecha": "2022-12-31",
+      "valor": 21.26,
+      "provisorio": false
+    },
+    {
+      "fecha": "2023-12-31",
+      "valor": 20.04,
+      "provisorio": false
+    },
+    {
+      "fecha": "2024-12-31",
+      "valor": 15.6,
+      "provisorio": false
+    },
+    {
+      "fecha": "2025-12-31",
+      "valor": 14.53,
+      "provisorio": false
+    }
+  ]
+}

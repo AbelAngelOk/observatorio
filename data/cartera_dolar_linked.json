@@ -1,0 +1,14 @@
+{
+  "indicador": "Deuda en pesos dolar linked",
+  "unidad": "% de la deuda en pesos",
+  "metodologia": "Corte unico jun-2025 (OPC). El boletin A.1.4 no separa el dolar linked como categoria propia, asi que esta serie NO tiene historia: queda como referencia puntual.",
+  "fuente": "Datos trimestrales de la deuda",
+  "tipo_acceso_fuente": "scraping",
+  "datos": [
+    {
+      "fecha": "2025-06-30",
+      "valor": 2.1,
+      "provisorio": true
+    }
+  ]
+}

@@ -1,0 +1,54 @@
+{
+  "indicador": "Deuda en pesos NO ajustable por CER",
+  "unidad": "% de la deuda en pesos",
+  "metodologia": "Hoja A.1.4: deuda en moneda local no ajustable por CER (tasa fija + tasa cero + variable) / total moneda local. Junto con cartera_cer suma 100% de la deuda en pesos.",
+  "fuente": "Datos trimestrales de la deuda",
+  "tipo_acceso_fuente": "scraping",
+  "datos": [
+    {
+      "fecha": "2018-12-31",
+      "valor": 72.2,
+      "provisorio": false
+    },
+    {
+      "fecha": "2019-12-31",
+      "valor": 65.8,
+      "provisorio": false
+    },
+    {
+      "fecha": "2020-12-31",
+      "valor": 46.7,
+      "provisorio": false
+    },
+    {
+      "fecha": "2021-12-31",
+      "valor": 42.3,
+      "provisorio": false
+    },
+    {
+      "fecha": "2022-12-31",
+      "valor": 48.2,
+      "provisorio": false
+    },
+    {
+      "fecha": "2023-12-31",
+      "valor": 55.5,
+      "provisorio": false
+    },
+    {
+      "fecha": "2024-12-31",
+      "valor": 36.0,
+      "provisorio": false
+    },
+    {
+      "fecha": "2025-06-30",
+      "valor": 42.0,
+      "provisorio": true
+    },
+    {
+      "fecha": "2025-12-31",
+      "valor": 50.1,
+      "provisorio": false
+    }
+  ]
+}

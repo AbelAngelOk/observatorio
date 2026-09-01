@@ -1,0 +1,12 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(rm -f _probe.xlsx observatorio.db)",
+      "Bash(rm -rf data)",
+      "Bash(python actualizar.py --solo deuda_historica)",
+      "Bash(python -c ' *)",
+      "Bash(rm -f _verify.html _probe.xlsx)",
+      "Bash(rm -f observatorio.db)"
+    ]
+  }
+}

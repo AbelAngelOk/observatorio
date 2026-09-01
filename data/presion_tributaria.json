@@ -1,0 +1,19 @@
+{
+  "indicador": "Presion tributaria efectiva nacional",
+  "unidad": "% del PBI",
+  "metodologia": null,
+  "fuente": "Informe de recaudacion",
+  "tipo_acceso_fuente": "manual",
+  "datos": [
+    {
+      "fecha": "2024-12-31",
+      "valor": 22.5,
+      "provisorio": true
+    },
+    {
+      "fecha": "2025-12-31",
+      "valor": 21.4,
+      "provisorio": true
+    }
+  ]
+}

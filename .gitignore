@@ -1,0 +1,19 @@
+# Base de datos de la APLICACION: usuarios, hashes de contrasena, sesiones y
+# progreso de cursos. NUNCA se versiona.
+#
+# Ojo con la asimetria: observatorio.db SI se commitea (es data publica y
+# regenerable, y el workflow de ingesta la actualiza sola). app.db no: contiene
+# datos personales y no se puede reconstruir desde las fuentes.
+app.db
+app.db-wal
+app.db-shm
+
+# Artefactos de Python
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+
+# Temporales de los pipelines de Excel/CSV
+_tmp_*.xlsx
+_tmp_*.csv

@@ -1,0 +1,12 @@
+# --- Servidor web (app.py: sitio + API de cuentas y cursos) ---
+# El hashing de contrasenas NO figura aca a proposito: usa hashlib.scrypt de la
+# stdlib, asi que no hay ninguna dependencia de criptografia que auditar.
+fastapi>=0.115      # API y ruteo
+uvicorn>=0.30       # servidor ASGI
+fpdf2>=2.7          # solo webapp/certificados.py: arma el PDF del certificado
+
+# --- Pipelines de ingesta ---
+# init_db.py y export_json.py corren con la stdlib: no necesitan nada.
+requests>=2.31      # todos los pipelines de API + descarga del Excel y el CSV
+openpyxl>=3.1       # solo pipeline_deuda_publica.py (parseo del .xlsx de Finanzas)
+pandas>=2.0         # solo pipeline_gasto_nacion.py (lectura del CSV de Presupuesto)

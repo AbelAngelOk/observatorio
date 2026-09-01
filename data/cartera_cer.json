@@ -1,0 +1,54 @@
+{
+  "indicador": "Deuda en pesos ajustable por CER",
+  "unidad": "% de la deuda en pesos",
+  "metodologia": "Hoja A.1.4 del boletin trimestral: deuda en moneda local ajustable por CER / total moneda local, corte anual (31/12) desde 2014.",
+  "fuente": "Datos trimestrales de la deuda",
+  "tipo_acceso_fuente": "scraping",
+  "datos": [
+    {
+      "fecha": "2018-12-31",
+      "valor": 27.8,
+      "provisorio": false
+    },
+    {
+      "fecha": "2019-12-31",
+      "valor": 34.2,
+      "provisorio": false
+    },
+    {
+      "fecha": "2020-12-31",
+      "valor": 53.3,
+      "provisorio": false
+    },
+    {
+      "fecha": "2021-12-31",
+      "valor": 57.7,
+      "provisorio": false
+    },
+    {
+      "fecha": "2022-12-31",
+      "valor": 51.8,
+      "provisorio": false
+    },
+    {
+      "fecha": "2023-12-31",
+      "valor": 44.5,
+      "provisorio": false
+    },
+    {
+      "fecha": "2024-12-31",
+      "valor": 64.0,
+      "provisorio": false
+    },
+    {
+      "fecha": "2025-06-30",
+      "valor": 55.9,
+      "provisorio": true
+    },
+    {
+      "fecha": "2025-12-31",
+      "valor": 49.9,
+      "provisorio": false
+    }
+  ]
+}

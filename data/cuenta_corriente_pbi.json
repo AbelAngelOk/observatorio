@@ -1,0 +1,109 @@
+{
+  "indicador": "Saldo de cuenta corriente anual, % del PBI",
+  "unidad": "% del PBI",
+  "metodologia": "CALCULO PROPIO: cuenta_corriente_anual (USD) / pbi_usd_anual * 100. La pata externa de los deficits gemelos.",
+  "fuente": "Balanza de pagos",
+  "tipo_acceso_fuente": "scraping",
+  "datos": [
+    {
+      "fecha": "2006-12-31",
+      "valor": 2.79,
+      "provisorio": false
+    },
+    {
+      "fecha": "2007-12-31",
+      "valor": 2.1,
+      "provisorio": false
+    },
+    {
+      "fecha": "2008-12-31",
+      "valor": 1.49,
+      "provisorio": false
+    },
+    {
+      "fecha": "2009-12-31",
+      "valor": 2.17,
+      "provisorio": false
+    },
+    {
+      "fecha": "2010-12-31",
+      "valor": -0.38,
+      "provisorio": false
+    },
+    {
+      "fecha": "2011-12-31",
+      "valor": -1.01,
+      "provisorio": false
+    },
+    {
+      "fecha": "2012-12-31",
+      "valor": -0.37,
+      "provisorio": false
+    },
+    {
+      "fecha": "2013-12-31",
+      "valor": -2.14,
+      "provisorio": false
+    },
+    {
+      "fecha": "2014-12-31",
+      "valor": -1.63,
+      "provisorio": false
+    },
+    {
+      "fecha": "2015-12-31",
+      "valor": -2.74,
+      "provisorio": false
+    },
+    {
+      "fecha": "2016-12-31",
+      "valor": -2.71,
+      "provisorio": false
+    },
+    {
+      "fecha": "2017-12-31",
+      "valor": -4.84,
+      "provisorio": false
+    },
+    {
+      "fecha": "2018-12-31",
+      "valor": -5.15,
+      "provisorio": false
+    },
+    {
+      "fecha": "2019-12-31",
+      "valor": -0.78,
+      "provisorio": false
+    },
+    {
+      "fecha": "2020-12-31",
+      "valor": 0.7,
+      "provisorio": false
+    },
+    {
+      "fecha": "2021-12-31",
+      "valor": 1.36,
+      "provisorio": false
+    },
+    {
+      "fecha": "2022-12-31",
+      "valor": -0.62,
+      "provisorio": false
+    },
+    {
+      "fecha": "2023-12-31",
+      "valor": -3.41,
+      "provisorio": false
+    },
+    {
+      "fecha": "2024-12-31",
+      "valor": 0.92,
+      "provisorio": false
+    },
+    {
+      "fecha": "2025-12-31",
+      "valor": -1.14,
+      "provisorio": false
+    }
+  ]
+}

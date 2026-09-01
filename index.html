@@ -1,0 +1,2203 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Observatorio — Macroeconomía Argentina</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;0,6..72,600;1,6..72,400&family=Inter:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
+<style>
+  :root{
+    /* Tema claro, beige como eje. Paleta:
+       #fcfbf6 crema · #efe3d3 beige · #d9c3a9 tostado · #4f6d89 azul acero · #27384a navy */
+    --ink:#efe3d3;        /* fondo de pagina (beige, el eje) */
+    --panel:#fcfbf6;      /* tarjetas (crema, mas claro que el fondo) */
+    --panel-alt:#e7d8c2;  /* hover / menus / recuadros (beige mas profundo) */
+    --paper:#27384a;      /* texto principal (navy) */
+    --muted:#5b6b7b;      /* texto secundario (azul grisaceo) */
+    --gold:#4f6d89;       /* acento (azul acero) */
+    --teal:#4f6d89;       /* positivo (azul) */
+    --brick:#a2503a;      /* negativo (terracota, armonizado con el beige) */
+    --line:rgba(39,56,74,0.14);
+    --line-strong:rgba(39,56,74,0.24);
+  }
+  *{box-sizing:border-box;}
+  html,body{margin:0;padding:0;}
+  body{
+    background:var(--ink);
+    color:var(--paper);
+    font-family:'Inter',sans-serif;
+    -webkit-font-smoothing:antialiased;
+  }
+  a{color:var(--gold);}
+
+  /* --- Header superior: nombre a la izquierda, navegacion a la derecha --- */
+  .topbar{
+    position:sticky; top:0; z-index:60;
+    display:flex; align-items:center; justify-content:space-between;
+    gap:16px; flex-wrap:wrap;
+    padding:14px clamp(20px,4vw,48px);
+    background:rgba(239,227,211,0.92);
+    backdrop-filter:blur(10px);
+    border-bottom:1px solid var(--line-strong);
+  }
+  .brand{
+    display:flex; flex-direction:column; line-height:1.15;
+    background:none; border:none; text-align:left; cursor:pointer; padding:0;
+  }
+  .brand .eyebrow{
+    font-family:'IBM Plex Mono',monospace; font-size:10px;
+    letter-spacing:.16em; text-transform:uppercase; color:var(--gold);
+  }
+  .brand .name{
+    font-family:'Newsreader',serif; font-weight:500; font-size:22px; color:var(--paper);
+  }
+
+  .mainnav{ display:flex; align-items:center; gap:4px; flex-wrap:wrap; }
+  .navlink{
+    background:none; border:none; cursor:pointer;
+    font-family:'Inter',sans-serif; font-size:14px; color:var(--muted);
+    padding:9px 14px; border-radius:6px;
+  }
+  .navlink:hover{ color:var(--paper); }
+  .navlink.active{ color:var(--paper); background:var(--panel-alt); }
+  .navlink .caret{ font-size:9px; margin-left:6px; opacity:.7; }
+
+  .dropdown{ position:relative; }
+  .dropdown-menu{
+    position:absolute; right:0; top:calc(100% + 8px);
+    display:none; flex-direction:column; gap:1px;
+    background:var(--panel-alt); border:1px solid var(--line-strong);
+    border-radius:10px; padding:6px; min-width:280px;
+    max-height:72vh; overflow:auto;
+    box-shadow:0 16px 40px rgba(39,56,74,.22);
+    scrollbar-width:thin; scrollbar-color:var(--line-strong) transparent;
+  }
+  .dropdown-menu::-webkit-scrollbar{ width:7px; }
+  .dropdown-menu::-webkit-scrollbar-track{ background:transparent; }
+  .dropdown-menu::-webkit-scrollbar-thumb{ background:var(--line-strong); border-radius:10px; }
+  .dropdown-menu::-webkit-scrollbar-thumb:hover{ background:var(--gold); }
+  .dropdown.open .dropdown-menu{ display:flex; }
+  .dropdown.open > .navlink .caret{ transform:rotate(180deg); display:inline-block; }
+  @media (max-width:560px){
+    .dropdown-menu{ left:0; right:auto; width:calc(100vw - 40px); }
+  }
+
+  .idx-item{
+    display:flex; align-items:baseline; gap:11px; width:100%;
+    text-align:left; padding:10px 12px; border-radius:6px;
+    background:none; border:none; color:var(--muted);
+    font-size:13.5px; cursor:pointer; font-family:'Inter',sans-serif;
+  }
+  .idx-item .n{
+    font-family:'IBM Plex Mono',monospace; font-size:11px;
+    color:var(--muted); min-width:18px;
+  }
+  .idx-item.active{ background:var(--panel); color:var(--paper); }
+  .idx-item.active .n{ color:var(--gold); }
+  .idx-item:hover{ color:var(--paper); background:var(--panel); }
+
+  /* --- Vistas (home / about / indicadores) --- */
+  .view{ display:none; }
+  .view.visible{ display:block; }
+  main{ padding:0; }
+  .content{ max-width:1180px; margin:0 auto; padding:36px clamp(20px,4vw,48px) 72px; }
+
+  /* Home */
+  .hero{ max-width:820px; }
+  .hero .eyebrow{
+    font-family:'IBM Plex Mono',monospace; font-size:11px; letter-spacing:.14em;
+    text-transform:uppercase; color:var(--gold); margin:0 0 14px;
+  }
+  .hero h1{
+    font-family:'Newsreader',serif; font-weight:500;
+    font-size:clamp(30px,5vw,52px); margin:0 0 16px; letter-spacing:-.01em;
+  }
+  .hero p{ color:var(--muted); font-size:16px; line-height:1.7; margin:0 0 14px; max-width:60ch; }
+  .hero .date-stamp{
+    font-family:'IBM Plex Mono',monospace; font-size:12px; color:var(--muted);
+    margin-top:26px; letter-spacing:.04em;
+  }
+  .date-stamp b{ color:var(--paper); font-weight:500; }
+  .cta{
+    display:inline-block; margin-top:28px; cursor:pointer;
+    font-family:'Inter',sans-serif; font-size:14px; color:#fcfbf6;
+    background:var(--gold); border:none; border-radius:7px; padding:12px 22px;
+  }
+  .hl-grid{
+    display:grid; grid-template-columns:repeat(auto-fit,minmax(180px,1fr));
+    gap:1px; background:var(--line); border:1px solid var(--line);
+    margin-top:44px; max-width:760px;
+  }
+  .hl{ background:var(--panel); padding:18px 20px; }
+  .hl .k{ font-family:'IBM Plex Mono',monospace; font-size:10.5px; letter-spacing:.06em;
+    text-transform:uppercase; color:var(--muted); margin-bottom:8px; }
+  .hl .v{ font-family:'Newsreader',serif; font-size:22px; }
+
+  /* Panorama: semaforos de estado en Home, mismo criterio pos/neg que ya usa
+     cada panel (ver tonoBaja/tonoSigno) -- no es un juicio nuevo. */
+  .panorama{ margin-top:52px; max-width:960px; }
+  .panorama-tit{ font-family:'Newsreader',serif; font-weight:500; font-size:22px; margin:0 0 8px; }
+  .panorama-sub{ color:var(--muted); font-size:13.5px; line-height:1.6; margin:0 0 22px; max-width:62ch; }
+  .panorama-grid{
+    display:grid; grid-template-columns:repeat(auto-fit,minmax(220px,1fr));
+    gap:1px; background:var(--line); border:1px solid var(--line);
+  }
+  .farol{
+    display:block; width:100%; text-align:left; cursor:pointer;
+    background:var(--panel); border:none; padding:18px 20px;
+    font-family:'Inter',sans-serif; color:var(--paper);
+  }
+  .farol:hover{ background:var(--panel-alt); }
+  .farol-punto{
+    width:9px; height:9px; border-radius:50%; margin-bottom:12px;
+    background:var(--line-strong);   /* neutro: sin dato o variacion nula */
+  }
+  .farol-punto.pos{ background:var(--teal); }
+  .farol-punto.neg{ background:var(--brick); }
+  .farol-k{
+    font-family:'IBM Plex Mono',monospace; font-size:10px; letter-spacing:.06em;
+    text-transform:uppercase; color:var(--muted); margin-bottom:8px;
+  }
+  .farol-v{ font-family:'Newsreader',serif; font-size:21px; margin-bottom:6px; }
+  .farol-msg{ font-size:12.5px; line-height:1.5; color:var(--muted); }
+
+  /* About */
+  .prose{ max-width:70ch; }
+  .prose h2{ font-family:'Newsreader',serif; font-weight:500; font-size:28px; margin:0 0 18px; }
+  .prose h3{ font-family:'Newsreader',serif; font-weight:500; font-size:19px; margin:30px 0 10px; }
+  .prose p{ color:var(--muted); font-size:15px; line-height:1.8; margin:0 0 14px; }
+  .prose b{ color:var(--paper); font-weight:500; }
+  .prose a{ color:var(--gold); }
+
+  .panel-header{
+    display:flex;
+    justify-content:space-between;
+    align-items:flex-start;
+    flex-wrap:wrap;
+    gap:20px;
+    margin-bottom:22px;
+  }
+  .panel-header h2{
+    font-family:'Newsreader',serif;
+    font-weight:500;
+    font-size:26px;
+    margin:0 0 6px;
+  }
+  .panel-header p{
+    color:var(--muted);
+    font-size:13.5px;
+    margin:0;
+    max-width:56ch;
+  }
+
+  .stamp{
+    flex-shrink:0;
+    width:118px;
+    height:118px;
+    border:1.5px dashed var(--line-strong);
+    border-radius:50%;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    text-align:center;
+    transform:rotate(-6deg);
+    padding:10px;
+  }
+  .stamp-inner{
+    font-family:'IBM Plex Mono',monospace;
+    font-size:9px;
+    letter-spacing:.08em;
+    text-transform:uppercase;
+    color:var(--gold);
+    line-height:1.5;
+  }
+  .stamp-inner .big{
+    display:block;
+    font-size:11px;
+    color:var(--paper);
+    margin:2px 0;
+  }
+
+  .stats-row{
+    display:grid;
+    grid-template-columns:repeat(auto-fit,minmax(150px,1fr));
+    gap:1px;
+    background:var(--line);
+    border:1px solid var(--line);
+    margin-bottom:24px;
+  }
+  .stat{
+    background:var(--panel);
+    padding:16px 18px;
+  }
+  .stat .stat-label{
+    font-family:'IBM Plex Mono',monospace;
+    font-size:10.5px;
+    letter-spacing:.06em;
+    text-transform:uppercase;
+    color:var(--muted);
+    margin-bottom:8px;
+  }
+  .stat .stat-value{
+    font-family:'Newsreader',serif;
+    font-size:24px;
+    font-weight:500;
+  }
+  .stat .stat-value.pos{color:var(--teal);}
+  .stat .stat-value.neg{color:var(--brick);}
+
+  .chart-panel{
+    background:var(--panel);
+    border:1px solid var(--line);
+    padding:22px clamp(14px,2.5vw,28px) 26px;
+  }
+  .chart-wrap{position:relative;height:380px;width:100%;}
+  .chart-status{
+    font-family:'IBM Plex Mono',monospace;
+    font-size:12px;
+    color:var(--muted);
+    padding:60px 0;
+    text-align:center;
+  }
+  .chart-status.err{color:var(--brick);}
+  .chart-status a{color:var(--gold);}
+
+  .range-row{
+    display:flex;
+    gap:6px;
+    margin-bottom:18px;
+    flex-wrap:wrap;
+  }
+  .range-btn{
+    font-family:'IBM Plex Mono',monospace;
+    font-size:11.5px;
+    color:var(--muted);
+    background:var(--panel-alt);
+    border:1px solid var(--line);
+    padding:6px 12px;
+    cursor:pointer;
+  }
+  .range-btn.active{
+    color:#fcfbf6;
+    background:var(--gold);
+    border-color:var(--gold);
+  }
+
+  /* Overlay de presidencias (todos los graficos) */
+  .pres-row{ margin-bottom:16px; }
+  .pres-btn{
+    font-family:'IBM Plex Mono',monospace; font-size:11.5px; color:var(--muted);
+    background:var(--panel-alt); border:1px solid var(--line); padding:6px 12px;
+    cursor:pointer; border-radius:2px;
+  }
+  .pres-btn:hover{ color:var(--paper); }
+  .pres-btn.active{ color:#fcfbf6; background:var(--gold); border-color:var(--gold); }
+  .pres-chips{ display:none; flex-wrap:wrap; gap:9px 18px; margin-top:16px; }
+  .pres-chip{
+    display:inline-flex; align-items:center; gap:7px;
+    font-family:'Inter',sans-serif; font-size:12px; color:var(--muted);
+  }
+  .pres-chip i{ width:11px; height:11px; border-radius:2px; flex-shrink:0; }
+
+  .source-note{
+    margin-top:18px;
+    padding-top:16px;
+    border-top:1px solid var(--line);
+    font-size:12px;
+    color:var(--muted);
+    line-height:1.7;
+  }
+  .source-note b{color:var(--paper);font-weight:500;}
+
+  .roadmap-note{
+    margin-top:34px;
+    padding:18px 20px;
+    background:var(--panel-alt);
+    border-left:2px solid var(--gold);
+    font-size:13px;
+    color:var(--muted);
+    line-height:1.7;
+  }
+  .roadmap-note b{color:var(--paper);}
+  .panel{display:none;}
+  .panel.visible{display:block;}
+
+  /* ===== Nav: encabezados de grupo del dropdown ===== */
+  .idx-group{
+    font-family:'IBM Plex Mono',monospace; font-size:9.5px; letter-spacing:.13em;
+    text-transform:uppercase; color:var(--muted);
+    padding:12px 12px 5px; border-top:1px solid var(--line);
+    margin-top:4px;
+  }
+  .dropdown-menu .idx-group:first-child{ border-top:none; margin-top:0; padding-top:6px; }
+
+  /* ===== Cuenta ===== */
+  #auth-slot{ display:flex; align-items:center; margin-left:6px; }
+  .content.estrecho{ max-width:520px; }
+  .titulo-seccion{ font-family:'Newsreader',serif; font-weight:500; font-size:28px; margin:0 0 20px; }
+  .titulo-sub{ font-family:'Newsreader',serif; font-weight:500; font-size:19px; margin:34px 0 12px; }
+
+  .tabs{ display:flex; gap:2px; margin-bottom:26px; border-bottom:1px solid var(--line); }
+  .tab{
+    background:none; border:none; cursor:pointer; padding:10px 16px;
+    font-family:'Inter',sans-serif; font-size:14px; color:var(--muted);
+    border-bottom:2px solid transparent; margin-bottom:-1px;
+  }
+  .tab.activo{ color:var(--paper); border-bottom-color:var(--gold); }
+
+  .form{ display:flex; flex-direction:column; gap:16px; }
+  /* [hidden] y .form{display:flex} tienen la misma especificidad (0,1,0): sin
+     esta regla, display:flex le gana al [hidden]{display:none} del navegador
+     y los dos formularios (login y registro) quedan visibles a la vez,
+     apilados y con campos mezclados. */
+  .form[hidden]{ display:none; }
+  .form-intro{ color:var(--muted); font-size:14px; margin:0; line-height:1.6; }
+  .form label{ display:flex; flex-direction:column; gap:6px; font-size:13px; color:var(--muted); }
+  .form input{
+    font-family:'Inter',sans-serif; font-size:15px; color:var(--paper);
+    background:var(--panel); border:1px solid var(--line-strong);
+    border-radius:6px; padding:11px 13px;
+  }
+  .form input:focus{ outline:2px solid var(--gold); outline-offset:-1px; }
+  .form .ayuda{ font-size:11.5px; color:var(--muted); }
+  .form .cta{ margin-top:6px; align-self:flex-start; }
+  .form-error, .form-ok{ font-size:13px; padding:10px 12px; border-radius:6px; line-height:1.5; }
+  .form-error{ color:#fcfbf6; background:var(--brick); }
+  .form-ok{ color:#fcfbf6; background:var(--gold); }
+
+  .ficha{ background:var(--panel); border:1px solid var(--line); padding:18px 20px; }
+  .ficha .fila{ display:flex; justify-content:space-between; gap:16px; padding:7px 0; font-size:14px; }
+  .ficha .fila span:first-child{ color:var(--muted); }
+
+  /* ===== Cursos ===== */
+  .catalogo-intro{ color:var(--muted); font-size:14.5px; line-height:1.7; margin:0 0 24px; max-width:60ch; }
+  .catalogo{
+    display:grid; grid-template-columns:repeat(auto-fit,minmax(230px,1fr));
+    gap:14px; max-width:900px;
+  }
+  .catalogo-item{
+    display:block; width:100%; text-align:left; cursor:pointer;
+    background:var(--panel); border:1px solid var(--line);
+    padding:20px 22px; font-family:'Inter',sans-serif; color:var(--paper);
+  }
+  .catalogo-item:hover{ background:var(--panel-alt); border-color:var(--line-strong); }
+  .catalogo-item .grupo{
+    font-family:'IBM Plex Mono',monospace; font-size:10.5px; letter-spacing:.06em;
+    text-transform:uppercase; color:var(--gold); margin-bottom:10px;
+  }
+  .catalogo-item h3{ font-family:'Newsreader',serif; font-weight:500; font-size:20px; margin:0 0 8px; }
+  .catalogo-item .bajada{ color:var(--muted); font-size:13.5px; line-height:1.65; margin:0 0 14px; }
+  .catalogo-item .meta{ font-family:'IBM Plex Mono',monospace; font-size:10.5px; color:var(--muted); letter-spacing:.03em; }
+
+  .volver-catalogo{
+    background:none; border:none; color:var(--gold); cursor:pointer;
+    font-family:'IBM Plex Mono',monospace; font-size:11px; letter-spacing:.06em;
+    padding:0; margin-bottom:18px; display:inline-block;
+  }
+
+  .curso-card{
+    background:var(--panel); border:1px solid var(--line);
+    padding:26px 28px; max-width:760px;
+  }
+  .curso-card h2{ font-family:'Newsreader',serif; font-weight:500; font-size:26px; margin:0 0 8px; }
+  .curso-card .bajada{ color:var(--muted); font-size:14.5px; line-height:1.7; margin:0 0 20px; max-width:60ch; }
+  .curso-meta{
+    font-family:'IBM Plex Mono',monospace; font-size:11px; color:var(--muted);
+    letter-spacing:.04em; margin-bottom:18px;
+  }
+
+  .barra{ height:7px; background:var(--panel-alt); border-radius:4px; overflow:hidden; margin:14px 0 8px; }
+  .barra > i{ display:block; height:100%; background:var(--gold); border-radius:4px; transition:width .3s; }
+  .barra-txt{ font-family:'IBM Plex Mono',monospace; font-size:11.5px; color:var(--muted); }
+
+  .cap-lista{ list-style:none; margin:20px 0 0; padding:0; }
+  .cap-lista li{ border-top:1px solid var(--line); }
+  .cap-item{
+    display:flex; align-items:center; gap:13px; width:100%; text-align:left;
+    background:none; border:none; cursor:pointer; padding:13px 4px;
+    font-family:'Inter',sans-serif; font-size:14.5px; color:var(--paper);
+  }
+  .cap-item:hover{ background:var(--panel-alt); }
+  .cap-item .tick{
+    flex-shrink:0; width:19px; height:19px; border-radius:50%;
+    border:1.5px solid var(--line-strong); display:flex; align-items:center;
+    justify-content:center; font-size:11px; color:transparent;
+  }
+  .cap-item.hecho .tick{ background:var(--gold); border-color:var(--gold); color:#fcfbf6; }
+  .cap-item .cap-min{ margin-left:auto; font-family:'IBM Plex Mono',monospace;
+    font-size:10.5px; color:var(--muted); flex-shrink:0; }
+
+  /* ===== Lector de capitulo ===== */
+  .lector{ max-width:68ch; }
+  .lector .migas{
+    font-family:'IBM Plex Mono',monospace; font-size:11px; color:var(--muted);
+    letter-spacing:.06em; margin-bottom:14px;
+  }
+  .lector .migas button{ background:none;border:none;color:var(--gold);cursor:pointer;font:inherit;padding:0; }
+  .lector h1{ font-family:'Newsreader',serif; font-weight:500; font-size:32px; margin:0 0 8px; line-height:1.25; }
+  .lector .resumen{ color:var(--muted); font-size:15px; line-height:1.6; margin:0 0 28px; }
+  .lector p{ font-size:16px; line-height:1.85; margin:0 0 18px; }
+  .lector h3{ font-family:'Newsreader',serif; font-weight:500; font-size:21px; margin:34px 0 12px; }
+  .lector ul{ margin:0 0 20px; padding-left:22px; }
+  .lector li{ font-size:15.5px; line-height:1.8; margin-bottom:9px; }
+  .lector b{ color:var(--paper); font-weight:600; }
+  .bloque-formula{
+    font-family:'IBM Plex Mono',monospace; font-size:13.5px; line-height:1.8;
+    background:var(--panel); border-left:3px solid var(--gold);
+    padding:16px 18px; margin:0 0 22px; white-space:pre-line;
+  }
+  .bloque-nota{
+    font-size:14px; line-height:1.7; color:var(--muted);
+    background:var(--panel-alt); padding:15px 18px; margin:0 0 22px;
+    border-radius:6px;
+  }
+  /* Diagramas: SVG chico armado a mano (conjuntos anidados o cajas con
+     flechas) para mostrar como se relacionan un par de entidades. */
+  .bloque-diagrama{ margin:8px 0 28px; }
+  .bloque-diagrama svg{ display:block; width:100%; height:auto; }
+
+  /* Tablero: la ficha de lectura del grafico */
+  .tablero{ background:var(--panel); border:1px solid var(--line-strong); margin:34px 0 26px; }
+  .tablero-tit{
+    padding:15px 20px; border-bottom:1px solid var(--line);
+    display:flex; justify-content:space-between; align-items:baseline; gap:14px; flex-wrap:wrap;
+  }
+  .tablero-tit b{ font-family:'Newsreader',serif; font-weight:500; font-size:19px; }
+  .tablero-tit .unidad{ font-family:'IBM Plex Mono',monospace; font-size:10.5px; color:var(--muted); }
+  .tablero-grid{ display:grid; grid-template-columns:1fr 1fr; gap:1px; background:var(--line); }
+  @media (max-width:640px){ .tablero-grid{ grid-template-columns:1fr; } }
+  .tablero-celda{ background:var(--panel); padding:15px 20px; }
+  .tablero-celda h4{
+    font-family:'IBM Plex Mono',monospace; font-size:10px; letter-spacing:.1em;
+    text-transform:uppercase; color:var(--muted); margin:0 0 9px; font-weight:500;
+  }
+  .tablero-celda ul{ margin:0; padding-left:17px; }
+  .tablero-celda li{ font-size:13.5px; line-height:1.65; margin-bottom:6px; }
+  .tablero-lectura{ border-top:1px solid var(--line); padding:15px 20px; }
+  .tablero-lectura div{ font-size:14px; line-height:1.7; margin-bottom:9px; }
+  .tablero-lectura .flecha{ font-weight:600; }
+  .sube .flecha{ color:var(--teal); }
+  .baja .flecha{ color:var(--brick); }
+  .tablero-trampas{ border-top:1px solid var(--line); padding:15px 20px; background:var(--panel-alt); }
+
+  .lector-pie{
+    display:flex; justify-content:space-between; align-items:center; gap:14px;
+    margin-top:38px; padding-top:22px; border-top:1px solid var(--line); flex-wrap:wrap;
+  }
+  .btn-sec{
+    font-family:'Inter',sans-serif; font-size:14px; color:var(--paper);
+    background:var(--panel-alt); border:1px solid var(--line-strong);
+    border-radius:7px; padding:11px 18px; cursor:pointer;
+  }
+  .btn-sec:hover{ border-color:var(--gold); }
+  .btn-sec[disabled]{ opacity:.4; cursor:default; }
+  .aviso-login{
+    font-size:13px; color:var(--muted); background:var(--panel-alt);
+    padding:12px 15px; border-radius:6px; margin-top:20px; line-height:1.6;
+  }
+  .aviso-login button{ background:none;border:none;color:var(--gold);cursor:pointer;font:inherit;padding:0; }
+
+  /* ===== Evaluacion (rendir el examen de un curso) ===== */
+  .evaluacion{ max-width:68ch; }
+  .evaluacion .migas{
+    font-family:'IBM Plex Mono',monospace; font-size:11px; color:var(--muted);
+    letter-spacing:.06em; margin-bottom:14px;
+  }
+  .evaluacion .migas button{ background:none;border:none;color:var(--gold);cursor:pointer;font:inherit;padding:0; }
+  .evaluacion h1{ font-family:'Newsreader',serif; font-weight:500; font-size:30px; margin:0 0 8px; line-height:1.25; }
+  .evaluacion .umbral{ color:var(--muted); font-size:14px; margin:0 0 30px; }
+
+  .pregunta{ margin:0 0 30px; padding-bottom:26px; border-bottom:1px solid var(--line); }
+  .pregunta .enunciado{ font-size:16px; line-height:1.6; margin:0 0 14px; font-weight:600; }
+  .pregunta.falta .enunciado{ color:var(--brick); }
+  .opciones{ display:flex; flex-direction:column; gap:8px; }
+  .opcion{
+    display:flex; align-items:center; gap:12px; text-align:left; width:100%;
+    background:var(--panel); border:1px solid var(--line-strong); border-radius:7px;
+    padding:12px 16px; cursor:pointer; font-family:'Inter',sans-serif; font-size:14.5px; color:var(--paper);
+  }
+  .opcion:hover{ border-color:var(--gold); }
+  .opcion .marca{
+    flex-shrink:0; width:17px; height:17px; border-radius:50%;
+    border:1.5px solid var(--line-strong); background:var(--panel);
+  }
+  .opcion.elegida{ border-color:var(--gold); background:var(--panel-alt); }
+  .opcion.elegida .marca{ background:var(--gold); border-color:var(--gold); }
+
+  .resultado{ background:var(--panel); border:1px solid var(--line-strong); padding:28px 30px; margin:0 0 26px; }
+  .resultado.aprobado{ border-color:var(--teal); }
+  .resultado.rechazado{ border-color:var(--brick); }
+  .resultado .puntaje{ font-family:'Newsreader',serif; font-size:40px; margin:0 0 8px; }
+  .resultado.aprobado .puntaje{ color:var(--teal); }
+  .resultado.rechazado .puntaje{ color:var(--brick); }
+  .resultado .msg{ font-size:14.5px; line-height:1.6; color:var(--muted); margin:0 0 20px; }
+  .resultado .acciones{ display:flex; gap:12px; flex-wrap:wrap; }
+
+  /* ===== Certificaciones (seccion aparte de Cursos) ===== */
+  .cert-grid{
+    display:grid; grid-template-columns:repeat(auto-fit,minmax(280px,1fr));
+    gap:16px; max-width:960px;
+  }
+  .cert-item{ background:var(--panel); border:1px solid var(--line); padding:22px 24px; }
+  .cert-item .grupo{
+    font-family:'IBM Plex Mono',monospace; font-size:10.5px; letter-spacing:.06em;
+    text-transform:uppercase; color:var(--gold); margin-bottom:10px;
+  }
+  .cert-item h3{ font-family:'Newsreader',serif; font-weight:500; font-size:19px; margin:0 0 12px; }
+  .cert-item .estado{ font-size:13px; line-height:1.6; color:var(--muted); margin-bottom:16px; }
+  .cert-badge{
+    display:inline-block; font-family:'IBM Plex Mono',monospace; font-size:10.5px;
+    letter-spacing:.05em; padding:4px 9px; border-radius:4px; margin-bottom:12px;
+  }
+  .cert-badge.aprobado{ background:rgba(79,109,137,0.16); color:var(--teal); }
+  .cert-badge.pendiente{ background:var(--panel-alt); color:var(--muted); }
+</style>
+</head>
+<body>
+
+<header class="topbar">
+  <button class="brand" data-view="home">
+    <span class="eyebrow">Observatorio</span>
+    <span class="name">Macroeconomía Argentina</span>
+  </button>
+  <nav class="mainnav">
+    <button class="navlink" data-view="home">Home</button>
+    <button class="navlink" data-view="about">Quiénes somos</button>
+    <div class="dropdown" id="dropdown-ind">
+      <button class="navlink" data-view="indicadores">Indicadores<span class="caret">▾</span></button>
+      <!-- Agrupados por tema. Los encabezados son <div>, no <button>: si fueran
+           .idx-item heredarian el :hover y pareceria que se puede clickearlos. -->
+      <div class="dropdown-menu">
+        <div class="idx-group">Deuda y reservas</div>
+        <button class="idx-item" data-panel="deuda">Deuda pública bruta</button>
+        <button class="idx-item" data-panel="consolidada">Deuda consolidada</button>
+        <button class="idx-item" data-panel="externa">Deuda externa</button>
+        <button class="idx-item" data-panel="residencia">Deuda por acreedor</button>
+        <button class="idx-item" data-panel="neta">Deuda neta</button>
+        <button class="idx-item" data-panel="cartera">Cartera por tipo de activo</button>
+        <button class="idx-item" data-panel="reservas">Reservas internacionales</button>
+
+        <div class="idx-group">Cuentas públicas</div>
+        <button class="idx-item" data-panel="fiscal">Resultado fiscal</button>
+        <button class="idx-item" data-panel="gemelos">Déficits gemelos</button>
+        <button class="idx-item" data-panel="gasto">Gasto de la Nación</button>
+        <button class="idx-item" data-panel="impositiva">Carga impositiva</button>
+
+        <div class="idx-group">Sector externo</div>
+        <button class="idx-item" data-panel="externo">Resultado externo</button>
+      </div>
+    </div>
+    <button class="navlink" data-view="cursos">Cursos</button>
+    <button class="navlink" data-view="certificaciones">Certificaciones</button>
+    <!-- Lo puebla assets/cuenta.js segun haya sesion o no. -->
+    <div id="auth-slot"></div>
+  </nav>
+</header>
+
+<main>
+  <!-- ===== HOME ===== -->
+  <section id="view-home" class="view">
+    <div class="content">
+      <div class="hero">
+        <p class="eyebrow">Boletín de series históricas · datos de fuentes oficiales</p>
+        <h1>La macroeconomía argentina, en series largas y auditables.</h1>
+        <p>Un observatorio de doce indicadores de la salud económica del país —deuda, reservas, resultado fiscal, sector externo, gasto y carga impositiva— construidos a partir de fuentes oficiales y actualizados automáticamente. Cada número dice de dónde sale y qué tan sólido es.</p>
+        <p>La mayoría de las series arranca entre 2003 y 2006, lo más atrás que llega cada fuente sin mezclar metodologías.</p>
+        <button class="cta" data-view="indicadores">Ver los indicadores →</button>
+        <div class="date-stamp">DATOS ACTUALIZADOS AL <b id="stamp-date">—</b></div>
+      </div>
+
+      <div class="hl-grid">
+        <div class="hl"><div class="k">Indicadores</div><div class="v">12 paneles</div></div>
+        <div class="hl"><div class="k">Observaciones</div><div class="v">+10.000</div></div>
+        <div class="hl"><div class="k">Serie más larga</div><div class="v">Deuda, 1993 →</div></div>
+        <div class="hl"><div class="k">Actualización</div><div class="v">Automática, diaria</div></div>
+      </div>
+
+      <!-- Semaforos: mismo criterio pos/neg que ya colorea cada panel
+           (tonoBaja/tonoSigno), no un juicio nuevo. Se arma por JS
+           (renderPanorama) porque necesita los datos de 6 series. -->
+      <div class="panorama">
+        <h2 class="panorama-tit">Panorama actual</h2>
+        <p class="panorama-sub">Seis indicadores clave, con el mismo color que ya ves al abrir cada gráfico — verde y rojo no son un juicio nuevo, es el mismo criterio de siempre, resumido acá. Hacé clic en cualquiera para ver el gráfico completo.</p>
+        <div class="panorama-grid" id="panorama-grid"></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== QUIÉNES SOMOS ===== -->
+  <section id="view-about" class="view">
+    <div class="content prose">
+      <h2>Quiénes somos</h2>
+      <p>El Observatorio de Macroeconomía Argentina es un proyecto de datos abiertos: reúne en un solo lugar las series históricas que hoy están dispersas entre el INDEC, el BCRA, la Secretaría de Hacienda y la de Finanzas, y las presenta con una regla simple — <b>cada indicador dice de dónde sale su dato y cuánto vale ese dato</b>.</p>
+
+      <h3>Cómo trabajamos</h3>
+      <p>Los datos no se cargan a mano: una serie de <b>pipelines automáticos</b> los trae de las APIs y publicaciones oficiales, los normaliza y los guarda en una base propia que es la única fuente de verdad del sitio. Esa base se actualiza sola todos los días. Cuando una fuente revisa una cifra, la versión vieja no se pisa: queda guardada, para no perder el historial de revisiones.</p>
+
+      <h3>Qué cuidamos</h3>
+      <p>No todos los números valen lo mismo. Una serie oficial continua no es lo mismo que un cálculo propio o una estimación de un tercero, y en este sitio nunca se mezclan sin avisar: cada panel aclara si el dato es oficial, derivado o aproximado, y qué método usa. Cuando algo es una aproximación —como la deuda consolidada— se dice explícitamente, con su límite.</p>
+
+      <h3>Las fuentes</h3>
+      <p>Datos abiertos de la Nación (<a href="https://apis.datos.gob.ar/series/api/" target="_blank" rel="noopener">API de series de tiempo</a>), boletines de la Secretaría de Finanzas, INDEC, Secretaría de Hacienda y, para el dólar paralelo, la fuente no oficial Bluelytics. El detalle completo de cada serie está en la documentación técnica del proyecto.</p>
+    </div>
+  </section>
+
+  <!-- ===== CUENTA (ingresar / crear cuenta) ===== -->
+  <!-- Una sola vista con dos formularios alternados: menos estado que dos vistas. -->
+  <section id="view-auth" class="view">
+    <div class="content estrecho">
+      <div class="tabs">
+        <button class="tab activo" data-form="login">Ingresar</button>
+        <button class="tab" data-form="registro">Crear cuenta</button>
+      </div>
+
+      <form id="form-login" class="form">
+        <p class="form-intro">Entrá para llevar el registro de los capítulos que completaste.</p>
+        <label>Email<input type="email" name="email" autocomplete="email" required></label>
+        <label>Contraseña<input type="password" name="password" autocomplete="current-password" required></label>
+        <div class="form-error" hidden></div>
+        <button type="submit" class="cta">Ingresar</button>
+      </form>
+
+      <form id="form-registro" class="form" hidden>
+        <p class="form-intro">Creá una cuenta para guardar tu progreso en los cursos.</p>
+        <label>Nombre completo<input type="text" name="nombre_completo" autocomplete="name" required></label>
+        <label>Email<input type="email" name="email" autocomplete="email" required></label>
+        <label>Contraseña<input type="password" name="password" autocomplete="new-password" required>
+          <span class="ayuda">Mínimo 8 caracteres.</span></label>
+        <div class="form-error" hidden></div>
+        <button type="submit" class="cta">Crear cuenta</button>
+      </form>
+    </div>
+  </section>
+
+  <!-- ===== PERFIL ===== -->
+  <section id="view-perfil" class="view">
+    <div class="content estrecho">
+      <h2 class="titulo-seccion">Tu cuenta</h2>
+      <div class="ficha" id="perfil-datos"></div>
+
+      <h3 class="titulo-sub">Tu progreso</h3>
+      <div id="perfil-progreso"></div>
+
+      <h3 class="titulo-sub">Cambiar contraseña</h3>
+      <form id="form-password" class="form">
+        <label>Contraseña actual<input type="password" name="actual" autocomplete="current-password" required></label>
+        <label>Contraseña nueva<input type="password" name="nueva" autocomplete="new-password" required></label>
+        <div class="form-error" hidden></div>
+        <div class="form-ok" hidden>Listo, contraseña actualizada.</div>
+        <button type="submit" class="cta">Cambiar contraseña</button>
+      </form>
+    </div>
+  </section>
+
+  <!-- ===== CURSOS (indice) ===== -->
+  <section id="view-cursos" class="view">
+    <div class="content" id="cursos-lista"></div>
+  </section>
+
+  <!-- ===== CAPITULO (lector) ===== -->
+  <section id="view-capitulo" class="view">
+    <div class="content" id="capitulo-cuerpo"></div>
+  </section>
+
+  <!-- ===== EVALUACION (rendir el examen de un curso) ===== -->
+  <section id="view-evaluacion" class="view">
+    <div class="content" id="evaluacion-cuerpo"></div>
+  </section>
+
+  <!-- ===== CERTIFICACIONES (seccion aparte de Cursos) ===== -->
+  <section id="view-certificaciones" class="view">
+    <div class="content" id="certificaciones-lista"></div>
+  </section>
+
+  <!-- ===== INDICADORES ===== -->
+  <section id="view-indicadores" class="view">
+    <div class="content">
+  <section id="panel-deuda" class="panel">
+    <div class="panel-header">
+      <div>
+        <h2>Deuda pública bruta</h2>
+        <p><b>Qué es:</b> todo lo que el Estado nacional (la Administración Central) debe a sus acreedores —bonos, letras, préstamos de organismos como el FMI, deuda con jubilados y con otros organismos públicos—, sumado y sin descontar nada. "Bruta" significa exactamente eso: es el pasivo total, antes de restarle los activos del Estado (por eso es mayor que la deuda neta del panel 04). Es la foto del endeudamiento total del Tesoro en cada momento.</p>
+      </div>
+      <div class="stamp">
+        <div class="stamp-inner">Fuente oficial<span class="big">Sec. Finanzas</span>al TC oficial</div>
+      </div>
+    </div>
+
+    <div class="stats-row">
+      <div class="stat"><div class="stat-label" id="lbl-deuda-last">Último dato</div><div class="stat-value" id="stat-deuda-last">—</div></div>
+      <div class="stat"><div class="stat-label">Variación último año</div><div class="stat-value" id="stat-deuda-var">—</div></div>
+      <div class="stat"><div class="stat-label">Máximo del período</div><div class="stat-value" id="stat-deuda-max">—</div></div>
+      <div class="stat"><div class="stat-label">Mínimo del período</div><div class="stat-value" id="stat-deuda-min">—</div></div>
+    </div>
+
+    <div class="chart-panel">
+      <div class="chart-wrap">
+        <canvas id="chart-deuda" role="img" aria-label="Evolución de la deuda pública bruta de la Administración Central en millones de dólares, desde 1993"></canvas>
+      </div>
+      <div class="source-note">
+        <b>Fuente:</b> Secretaría de Finanzas, en millones de USD. La serie es <b>anual</b> (un dato por año, al 31/12) de 1993 a 2018, y <b>mensual</b> desde 2019.
+        <b>Sobre "anual":</b> es un dato de frecuencia anual —un stock a fin de año—, no un dato "interanual". "Interanual" sería una variación (un año contra otro); eso es lo que muestra el recuadro "Variación último año". Los puntos mensuales desde 2019 son stocks a fin de cada mes, no variaciones.
+        <b>Tipo de cambio:</b> está al <b>dólar oficial</b> de cada cierre (así lo valúa Finanzas), <b>no</b> al blue. El blue solo se usa en el panel de Resultado fiscal.
+        <b>Nota:</b> la caída de dic-2023 (y la de 2002) responde a la devaluación, que licúa el valor en dólares de la deuda emitida en pesos — no a un desendeudamiento.
+      </div>
+    </div>
+  </section>
+
+  <section id="panel-consolidada" class="panel">
+    <div class="panel-header">
+      <div>
+        <h2>Deuda consolidada</h2>
+        <p><b>Qué es:</b> la deuda de <b>todo el sector público consolidado</b> — el Tesoro <em>más</em> el Banco Central — sumando lo que cada uno debe con costo financiero. El panel 01 mide solo lo que debe el Tesoro; pero el BCRA también toma deuda para absorber pesos (antes Leliq y pases, hoy casi extinguidas), y esa deuda es igual de real. La consolidada junta las dos para no perder de vista lo que el Estado, en conjunto, tendrá que pagar o refinanciar. Tu intuición es correcta: la altura de la línea en cada año es cuánto debe el Estado consolidado en ese momento — sube cuando se endeuda más, baja cuando se desendeuda (o cuando una devaluación licúa la parte en pesos).</p>
+      </div>
+      <div class="stamp">
+        <div class="stamp-inner">Cálculo propio<span class="big">Finanzas</span>+ BCRA</div>
+      </div>
+    </div>
+
+    <div class="stats-row">
+      <div class="stat"><div class="stat-label" id="lbl-consolidada-first">Primer año</div><div class="stat-value" id="stat-consolidada-first">—</div></div>
+      <div class="stat"><div class="stat-label" id="lbl-consolidada-last">Último año</div><div class="stat-value" id="stat-consolidada-last">—</div></div>
+      <div class="stat"><div class="stat-label">Variación del período</div><div class="stat-value" id="stat-consolidada-delta">—</div></div>
+      <div class="stat"><div class="stat-label">Años en la serie</div><div class="stat-value" id="stat-consolidada-n">—</div></div>
+    </div>
+
+    <div class="chart-panel">
+      <div class="chart-wrap">
+        <canvas id="chart-consolidada" role="img" aria-label="Deuda bruta más pasivos remunerados del BCRA, en millones de dólares, serie anual desde 2002"></canvas>
+      </div>
+      <div class="source-note">
+        <b>Metodología (obtención y normalización):</b> se construye acá, año a año, en tres pasos.
+        <b>1) Deuda bruta</b> del Tesoro (panel 01), ya en USD.
+        <b>2) Pasivos remunerados del BCRA</b> = Leliq/Lebac/títulos (serie <code>300.1_AP_PAS_TITCRA</code>, en miles de pesos → se pasa a millones) + pases pasivos (serie <code>331.1_PASES_REDESES</code>, se toma solo cuando el saldo es pasivo), traídos de la API de series.
+        <b>3) Normalización:</b> se toma el valor de <b>cierre de diciembre</b> de cada serie, los pasivos del BCRA se convierten a dólares al <b>tipo de cambio oficial</b> de fin de año, y se suman a la deuda bruta. Todo queda en millones de USD, frecuencia anual.
+        <b>Límite conocido:</b> NO resta las tenencias cruzadas dentro del sector público (Letras Intransferibles, Adelantos Transitorios), que no se publican como serie limpia — es una aproximación, no la cifra exacta de Chequeado, y puede diferir de la que citan otros analistas. En 2025 la consolidada ≈ la bruta porque los pasivos del BCRA cayeron casi a cero (las Leliq se eliminaron y los pases pasaron a LEFI del Tesoro, ya contadas en la bruta).
+      </div>
+    </div>
+  </section>
+
+  <section id="panel-externa" class="panel">
+    <div class="panel-header">
+      <div>
+        <h2>Deuda externa bruta</h2>
+        <p>Pasivos frente a no residentes de toda la economía (gobierno, BCRA, empresas y hogares), a valor nominal. A diferencia de la deuda pública bruta, esta la mide el INDEC por residencia del acreedor, no por tipo de emisor. Serie trimestral completa desde 2006.</p>
+      </div>
+      <div class="stamp">
+        <div class="stamp-inner">Fuente oficial<span class="big">INDEC</span>Balanza de pagos</div>
+      </div>
+    </div>
+
+    <div class="stats-row">
+      <div class="stat"><div class="stat-label" id="lbl-externa-last">Último dato</div><div class="stat-value" id="stat-externa-last">—</div></div>
+      <!-- ESTATICO: los dos ratios sobre PBI no son derivables de la base -- no hay serie de PBI cargada.
+           Cifras tomadas del informe del INDEC. Si algun dia entra una serie de PBI, pasan a calcularse. -->
+      <div class="stat"><div class="stat-label">% del PBI (I-26)</div><div class="stat-value">46,9%</div></div>
+      <div class="stat"><div class="stat-label">Mínimo % PBI (IV-24)</div><div class="stat-value pos">39,1%</div></div>
+      <div class="stat"><div class="stat-label">Frecuencia</div><div class="stat-value">Trimestral</div></div>
+    </div>
+
+    <div class="chart-panel">
+      <div class="chart-wrap">
+        <canvas id="chart-externa" role="img" aria-label="Deuda externa bruta de Argentina, en millones de dólares, para cuatro trimestres verificados entre el primer trimestre de 2022 y el primer trimestre de 2026"></canvas>
+      </div>
+      <div class="source-note">
+        <b>Fuente:</b> INDEC vía API de series de tiempo (posición de inversión internacional), ingerida automáticamente.
+        <b>Unidad:</b> millones de USD, valor nominal residual. <b>Frecuencia:</b> trimestral, serie continua desde el primer trimestre de 2006 (metodología MBP6).
+      </div>
+    </div>
+  </section>
+
+  <section id="panel-residencia" class="panel">
+    <div class="panel-header">
+      <div>
+        <h2>Deuda pública por residencia del acreedor</h2>
+        <p><b>Qué es:</b> la misma deuda del Estado nacional, pero partida según <b>dónde vive quien le prestó</b>: una línea es lo que se le debe a acreedores <b>del exterior</b> (no residentes) y la otra lo que se le debe a acreedores <b>locales</b> (residentes). Las dos suman el total. Sirve para responder una pregunta que el panel de deuda bruta no contesta: de todo lo que debe el Estado, ¿cuánto es deuda con afuera y cuánto es deuda con adentro?</p>
+      </div>
+      <div class="stamp">
+        <div class="stamp-inner">Fuente oficial<span class="big">Finanzas</span>hoja A.4.5</div>
+      </div>
+    </div>
+
+    <div class="stats-row">
+      <div class="stat"><div class="stat-label" id="lbl-residencia-no">No residentes</div><div class="stat-value" id="stat-residencia-no">—</div></div>
+      <div class="stat"><div class="stat-label" id="lbl-residencia-si">Residentes</div><div class="stat-value" id="stat-residencia-si">—</div></div>
+      <div class="stat"><div class="stat-label">En manos del exterior</div><div class="stat-value" id="stat-residencia-pct">—</div></div>
+      <div class="stat"><div class="stat-label">Cobertura</div><div class="stat-value" id="stat-residencia-cob">—</div></div>
+    </div>
+
+    <div class="chart-panel">
+      <div class="chart-wrap">
+        <canvas id="chart-residencia" role="img" aria-label="Deuda bruta de la Administración Central partida entre acreedores no residentes y residentes, en millones de dólares, serie trimestral desde 1994"></canvas>
+      </div>
+      <div class="source-note">
+        <b>Fuente:</b> Secretaría de Finanzas, boletín trimestral de deuda, hoja <b>A.4.5 "Por residencia del tenedor"</b>. El corte por residencia es una estimación de Finanzas construida sobre las cuentas internacionales del INDEC — no es un censo de tenedores.
+        <b>Unidad:</b> millones de USD (la fuente publica en miles de millones; acá se convierte). <b>Frecuencia:</b> trimestral desde 1998; los cuatro primeros puntos (1994-1997) son anuales. El primer trimestre de 2002 no tiene apertura publicada y queda fuera de la serie.
+        <b>Qué es y qué no:</b> es deuda <b>bruta de la Administración Central</b>, <b>no</b> la consolidada — no incluye los pasivos remunerados del BCRA (eso está en el panel Deuda consolidada). Además la hoja <b>excluye la deuda elegible pendiente de reestructuración</b> (holdouts), así que su total es algo menor que el del panel Deuda pública bruta.
+        <b>Ojo con "residentes":</b> esa línea incluye la deuda en manos de organismos del <b>propio sector público</b> (ANSES/FGS, BCRA), porque Finanzas no publica el intra-sector público como serie limpia. Por eso <b>no</b> hay que leerla como "deuda con acreedores privados locales", y el corte residentes/no residentes <b>no</b> equivale a "deuda con terceros".
+        <b>No confundir con Deuda externa bruta</b> (panel anterior): aquella la mide el INDEC y abarca a <b>toda la economía</b> (gobierno, BCRA, empresas y hogares); esta es solo la Administración Central.
+      </div>
+    </div>
+  </section>
+
+  <section id="panel-neta" class="panel">
+    <div class="panel-header">
+      <div>
+        <h2>Deuda neta</h2>
+        <p>Deuda consolidada menos las reservas internacionales del BCRA: qué tan "cara" es la deuda descontando lo que el Estado tiene en caja. Serie anual, cálculo propio desde 2003, con el mismo límite que la consolidada.</p>
+      </div>
+      <div class="stamp">
+        <div class="stamp-inner">Cálculo propio<span class="big">Consolidada</span>− reservas</div>
+      </div>
+    </div>
+
+    <div class="stats-row">
+      <div class="stat"><div class="stat-label" id="lbl-neta-first">Primer año</div><div class="stat-value" id="stat-neta-first">—</div></div>
+      <div class="stat"><div class="stat-label" id="lbl-neta-last">Último año</div><div class="stat-value" id="stat-neta-last">—</div></div>
+      <div class="stat"><div class="stat-label">Variación del período</div><div class="stat-value" id="stat-neta-delta">—</div></div>
+      <div class="stat"><div class="stat-label">Años en la serie</div><div class="stat-value" id="stat-neta-n">—</div></div>
+    </div>
+
+    <div class="chart-panel">
+      <div class="chart-wrap">
+        <canvas id="chart-neta" role="img" aria-label="Deuda neta de reservas, en millones de dólares, serie anual desde 2003"></canvas>
+      </div>
+      <div class="source-note">
+        <b>Cálculo propio:</b> deuda consolidada (panel 02) menos reservas internacionales del BCRA a fin de año.
+        <b>Unidad:</b> millones de USD. Mismo límite que la consolidada: no descuenta tenencias intra-sector público, así que es una aproximación y puede diferir de las cifras de EcoGo/Chequeado.
+      </div>
+    </div>
+  </section>
+
+  <section id="panel-reservas" class="panel">
+    <div class="panel-header">
+      <div>
+        <h2>Reservas internacionales del BCRA</h2>
+        <p>Stock de reservas internacionales, en millones de dólares. Serie mensual publicada por el Banco Central y replicada por la Administración Pública Nacional en su portal de datos abiertos.</p>
+      </div>
+      <div class="stamp">
+        <div class="stamp-inner">Fuente oficial<span class="big">BCRA</span>vía datos.gob.ar</div>
+      </div>
+    </div>
+
+    <div class="stats-row" id="stats-row">
+      <div class="stat"><div class="stat-label">Último dato</div><div class="stat-value" id="stat-last">—</div></div>
+      <div class="stat"><div class="stat-label">Variación 12 meses</div><div class="stat-value" id="stat-var">—</div></div>
+      <div class="stat"><div class="stat-label">Máximo histórico</div><div class="stat-value" id="stat-max">—</div></div>
+      <div class="stat"><div class="stat-label">Mínimo histórico</div><div class="stat-value" id="stat-min">—</div></div>
+    </div>
+
+    <div class="chart-panel">
+      <div class="range-row" id="range-row">
+        <button class="range-btn" data-range="24">2 años</button>
+        <button class="range-btn" data-range="60">5 años</button>
+        <button class="range-btn active" data-range="all">Serie completa</button>
+      </div>
+      <div class="chart-wrap">
+        <div class="chart-status" id="chart-status">Consultando datos.gob.ar…</div>
+        <canvas id="chart" role="img" aria-label="Evolución mensual de las reservas internacionales del BCRA en millones de dólares" style="display:none;"></canvas>
+      </div>
+      <div class="source-note">
+        <b>Fuente:</b> API Series de Tiempo, Argentina.gob.ar (serie <code>92.2_RESERVAS_IRES_0_0_32_40</code>), con datos originales del BCRA.
+        <b>Frecuencia:</b> diaria (días hábiles), serie completa desde 2003. <b>Unidad:</b> millones de USD.
+        <b>Ingesta:</b> <code>pipeline_reservas.py</code> trae la serie a la base todos los días; este panel lee lo que quedó en la base, no la API — por eso funciona aunque la API esté caída.
+      </div>
+    </div>
+
+    <div class="roadmap-note">
+      <b>Este es el único indicador con serie histórica completa y automatizada</b> — 8.500+ puntos diarios, ingeridos por un pipeline que corre solo. Los otros 10 paneles son muestras de puntos verificados a mano o cálculos de terceros, a la espera de su propio pipeline; cada panel dice explícitamente cuál es cuál y por qué.
+    </div>
+  </section>
+
+  <section id="panel-fiscal" class="panel">
+    <div class="panel-header">
+      <div>
+        <h2>Resultado fiscal — superávit / déficit</h2>
+        <p>Resultado primario y financiero mensual del Sector Público Nacional, en dólares. Serie mensual desde 2016 (IMIG, Secretaría de Hacienda). La línea de cero separa déficit (abajo) de superávit (arriba).</p>
+      </div>
+      <div class="stamp">
+        <div class="stamp-inner">Fuente oficial<span class="big">Sec. Hacienda</span>en US$ (blue)</div>
+      </div>
+    </div>
+
+    <div class="stats-row">
+      <div class="stat"><div class="stat-label" id="lbl-fiscal-prim">Resultado primario</div><div class="stat-value" id="stat-fiscal-prim">—</div></div>
+      <div class="stat"><div class="stat-label" id="lbl-fiscal-fin">Resultado financiero</div><div class="stat-value" id="stat-fiscal-fin">—</div></div>
+      <!-- ESTATICO: el resultado anual en % del PBI no es derivable de esta serie mensual/nominal. -->
+      <div class="stat"><div class="stat-label">Resultado 2024 (año)</div><div class="stat-value pos">Financiero +0,3% PBI</div></div>
+      <div class="stat"><div class="stat-label">Peor mes de la muestra</div><div class="stat-value" id="stat-fiscal-peor">—</div></div>
+    </div>
+
+    <div class="chart-panel">
+      <div class="chart-wrap">
+        <canvas id="chart-fiscal" role="img" aria-label="Resultado primario y financiero mensual del Sector Público Nacional, convertido a dólares, serie mensual desde 2016"></canvas>
+      </div>
+      <div class="source-note">
+        <b>Fuente:</b> Informe Mensual de Ingresos y Gastos (IMIG), Secretaría de Hacienda, base caja, vía API de series.
+        <b>Conversión a dólares:</b> cada mes en pesos ÷ dólar <b>blue</b> promedio de ese mes. El blue es una cotización <b>no oficial</b> (fuente Bluelytics); se usa el blue y no el oficial porque refleja mejor el poder de compra real. Se convierte a dólares justamente para que la inflación no aplaste el gráfico: en pesos corrientes los montos recientes tapan todo lo anterior.
+        <b>Primario:</b> antes de intereses de deuda. <b>Financiero:</b> después de intereses.
+      </div>
+    </div>
+  </section>
+
+  <section id="panel-gasto" class="panel">
+    <div class="panel-header">
+      <div>
+        <h2>Gasto de la Nación</h2>
+        <p>Gasto primario del Sector Público Nacional como porcentaje del PBI: cuántos puntos del producto consume el Estado nacional cada año. Serie anual desde 2004. Expresarlo en % del PBI evita el problema de los pesos corrientes (que crecen con la inflación) y permite comparar años distantes.</p>
+      </div>
+      <div class="stamp">
+        <div class="stamp-inner">Fuente oficial<span class="big">Presupuesto</span>gasto / PBI</div>
+      </div>
+    </div>
+
+    <div class="stats-row">
+      <div class="stat"><div class="stat-label" id="lbl-gasto-last">Último dato</div><div class="stat-value" id="stat-gasto-last">—</div></div>
+      <div class="stat"><div class="stat-label" id="lbl-gasto-ia">Variación i.a.</div><div class="stat-value" id="stat-gasto-ia">—</div></div>
+      <div class="stat"><div class="stat-label">Máximo del período</div><div class="stat-value" id="stat-gasto-max">—</div></div>
+      <div class="stat"><div class="stat-label">Mínimo del período</div><div class="stat-value" id="stat-gasto-min">—</div></div>
+    </div>
+
+    <div class="chart-panel">
+      <div class="chart-wrap">
+        <canvas id="chart-gasto" role="img" aria-label="Gasto primario del Sector Público Nacional como porcentaje del PBI, serie anual desde 2004"></canvas>
+      </div>
+      <div class="source-note">
+        <b>Fuente:</b> serie anual de gasto, recursos y PBI de la Subsecretaría de Presupuesto, CSV directo en
+        <a href="https://www.datos.gob.ar/dataset/sspre-presupuesto-administracion-publica-nacional/archivo/sspre_195" target="_blank" rel="noopener">datos.gob.ar (sspre_195)</a>.
+        El % del PBI sale del mismo archivo (trae gasto y PBI por año), sin cruzar con otra fuente.
+        <b>Unidad:</b> % del PBI. El pico de 2015-2017 y el ajuste de 2024 se leen directo: el gasto pasó de ~24% del PBI a ~16%.
+      </div>
+    </div>
+  </section>
+
+  <section id="panel-externo" class="panel">
+    <div class="panel-header">
+      <div>
+        <h2>Resultado externo — comercio exterior</h2>
+        <p>Lo que el país exporta e importa cada trimestre, una barra para cada uno. La diferencia entre las dos es el saldo comercial: cuando la verde (exportaciones) supera a la roja (importaciones), hay superávit. Serie trimestral desde 2003 (INDEC, Intercambio Comercial Argentino).</p>
+      </div>
+      <div class="stamp">
+        <div class="stamp-inner">Fuente oficial<span class="big">INDEC</span>Comercio exterior</div>
+      </div>
+    </div>
+
+    <div class="stats-row">
+      <div class="stat"><div class="stat-label" id="lbl-externo-expo">Exportado</div><div class="stat-value" id="stat-externo-expo">—</div></div>
+      <div class="stat"><div class="stat-label" id="lbl-externo-impo">Importado</div><div class="stat-value" id="stat-externo-impo">—</div></div>
+      <div class="stat"><div class="stat-label">Saldo comercial</div><div class="stat-value" id="stat-externo-saldo">—</div></div>
+      <div class="stat"><div class="stat-label">Cobertura</div><div class="stat-value" id="stat-externo-cob">—</div></div>
+    </div>
+
+    <div class="chart-panel">
+      <div class="chart-wrap">
+        <canvas id="chart-externo" role="img" aria-label="Exportaciones e importaciones trimestrales en millones de dólares, dos barras por trimestre, desde 2003"></canvas>
+      </div>
+      <div class="source-note">
+        <b>Fuente:</b> INDEC, Intercambio Comercial Argentino (ICA), vía API de series. <b>Exportaciones</b> a valor FOB, <b>importaciones</b> a valor CIF.
+        <b>Unidad:</b> millones de USD. <b>Frecuencia:</b> trimestral, con dos-tres meses de rezago.
+        El saldo comercial (exportado − importado) es la pata externa de los déficits gemelos del panel 09.
+      </div>
+    </div>
+  </section>
+
+  <section id="panel-gemelos" class="panel">
+    <div class="panel-header">
+      <div>
+        <h2>Déficits gemelos</h2>
+        <p>Las dos cuentas de un país, en la misma unidad y el mismo gráfico: el resultado fiscal primario y el saldo de cuenta corriente, ambos como % del PBI. Cuando las dos líneas caen juntas bajo cero, hay "déficits gemelos"; cuando se separan, una cuenta mejora mientras la otra empeora.</p>
+      </div>
+      <div class="stamp">
+        <div class="stamp-inner">Derivado de<span class="big">paneles 07 + 08</span>ambos % PBI</div>
+      </div>
+    </div>
+
+    <div class="stats-row">
+      <div class="stat"><div class="stat-label" id="lbl-gemelos-1">Fiscal</div><div class="stat-value" id="stat-gemelos-1">—</div></div>
+      <div class="stat"><div class="stat-label" id="lbl-gemelos-2">Externo</div><div class="stat-value" id="stat-gemelos-2">—</div></div>
+      <div class="stat"><div class="stat-label">Años con mismo signo</div><div class="stat-value" id="stat-gemelos-3">—</div></div>
+      <div class="stat"><div class="stat-label">Fuente propia</div><div class="stat-value">Ninguna — derivado</div></div>
+    </div>
+
+    <div class="chart-panel">
+      <div class="chart-wrap">
+        <canvas id="chart-gemelos" role="img" aria-label="Resultado fiscal primario y saldo de cuenta corriente, ambos como porcentaje del PBI, en un solo gráfico con línea de cero"></canvas>
+      </div>
+      <div class="source-note">
+        <b>Derivado:</b> la línea verde es el resultado primario anual (% del PBI) del panel 07; la dorada es la cuenta corriente anual (% del PBI), la misma balanza de pagos del panel 08. No hay fuente propia: son las dos series de esos paneles puestas en la misma escala.
+        La <b>línea de cero</b> es la clave: por debajo hay déficit, por encima superávit. Que las dos crucen el cero juntas o por separado es lo que este gráfico deja ver de un vistazo.
+      </div>
+    </div>
+  </section>
+
+  <section id="panel-impositiva" class="panel">
+    <div class="panel-header">
+      <div>
+        <h2>Carga impositiva</h2>
+        <p>Presión tributaria nacional: recaudación tributaria total sobre PBI. Serie anual desde 2004, calculada dividiendo la recaudación nacional (Secretaría de Hacienda) por el PBI corriente (INDEC), ambas ingeridas de la API de series.</p>
+      </div>
+      <div class="stamp">
+        <div class="stamp-inner">Cálculo propio<span class="big">Hacienda</span>/ PBI INDEC</div>
+      </div>
+    </div>
+
+    <div class="stats-row">
+      <div class="stat"><div class="stat-label" id="lbl-impositiva-1">Último año</div><div class="stat-value" id="stat-impositiva-1">—</div></div>
+      <div class="stat"><div class="stat-label" id="lbl-impositiva-2">Primer año</div><div class="stat-value" id="stat-impositiva-2">—</div></div>
+      <div class="stat"><div class="stat-label">Variación i.a.</div><div class="stat-value" id="stat-impositiva-delta">—</div></div>
+      <div class="stat"><div class="stat-label">Cobertura</div><div class="stat-value">2004 →</div></div>
+    </div>
+
+    <div class="chart-panel">
+      <div class="chart-wrap">
+        <canvas id="chart-impositiva" role="img" aria-label="Presión tributaria nacional como porcentaje del PBI, serie anual desde 2004"></canvas>
+      </div>
+      <div class="source-note">
+        <b>Fuente:</b> cálculo propio = recaudación tributaria nacional (Secretaría de Hacienda) ÷ PBI a precios corrientes (INDEC), las dos vía API de series.
+        <b>Unidad:</b> % del PBI. <b>Nota:</b> no es una serie oficial y no coincide exactamente con estimaciones privadas — IARAF calcula 21,4% para 2025 y Econviews ~25%, según qué base de tributos usan. Este cálculo toma la recaudación nacional total. Compará la definición antes de citar el número.
+      </div>
+    </div>
+  </section>
+
+  <section id="panel-cartera" class="panel">
+    <div class="panel-header">
+      <div>
+        <h2>Cartera de deuda en pesos, por tipo de activo</h2>
+        <p>Cómo se reparte la deuda en moneda local entre la que ajusta por inflación (CER) y la que no (tasa fija, cero o variable), año a año. Una barra apilada por año muestra cómo cambió la mezcla — cuánto de la deuda en pesos quedó atada a la inflación.</p>
+      </div>
+      <div class="stamp">
+        <div class="stamp-inner">Fuente oficial<span class="big">Finanzas</span>boletín trimestral</div>
+      </div>
+    </div>
+
+    <div class="stats-row">
+      <div class="stat"><div class="stat-label" id="lbl-cartera-cer">Ajustable CER</div><div class="stat-value" id="stat-cartera-cer">—</div></div>
+      <div class="stat"><div class="stat-label" id="lbl-cartera-fija">No ajustable</div><div class="stat-value" id="stat-cartera-fija">—</div></div>
+      <div class="stat"><div class="stat-label">Cobertura</div><div class="stat-value" id="stat-cartera-corte">—</div></div>
+      <div class="stat"><div class="stat-label">Dólar linked (jun-25)</div><div class="stat-value">2,1%</div></div>
+    </div>
+
+    <div class="chart-panel">
+      <div class="chart-wrap" style="height:320px;">
+        <canvas id="chart-cartera" role="img" aria-label="Composición de la deuda pública en pesos entre ajustable por CER y no ajustable, barras apiladas por año desde 2014"></canvas>
+      </div>
+      <div class="source-note">
+        <b>Fuente:</b> hoja "por moneda y tasa" (A.1.4) del boletín trimestral de la Secretaría de Finanzas, corte a diciembre de cada año.
+        <b>Cobertura:</b> solo deuda en moneda local — la porción en moneda extranjera queda fuera. Las dos barras suman 100% de la deuda en pesos.
+        <b>Nota:</b> el "dólar linked" no aparece como categoría propia en esta hoja, así que no tiene serie histórica; queda el dato puntual de jun-2025 (OPC) como referencia.
+      </div>
+    </div>
+  </section>
+    </div>
+  </section>
+</main>
+
+<script>
+// --- Formato y escritura de los recuadros de stats, compartido por los dos
+// bloques de abajo. Los stats no se escriben a mano en el HTML: cada render()
+// los calcula desde las mismas filas que alimentan su grafico, asi no pueden
+// desfasarse. Las pocas cifras que no salen de la base (las que necesitan una
+// serie de PBI, que no tenemos) quedan en el HTML marcadas como estaticas.
+function fmtUSD_M(v){
+  if(v===null||v===undefined||isNaN(v)) return "—";
+  return "US$ " + Math.round(v).toLocaleString("es-AR") + "M";
+}
+function fmtUSD_delta(v){
+  return (v<0?"−":"+") + "US$" + Math.round(Math.abs(v)).toLocaleString("es-AR") + "M";
+}
+function fmtARS_mM(v){ return "$" + Math.round(v).toLocaleString("es-AR") + "mM"; }
+function fmtARS_delta(v){
+  return (v<0?"−":"+") + "$" + Math.round(Math.abs(v)).toLocaleString("es-AR") + "mM";
+}
+function fmtPct(v, sufijo){
+  return (v<0?"−":"+") + Math.abs(v).toFixed(1).replace(".",",") + (sufijo||"%");
+}
+function fmtNivel(v, sufijo){
+  return v.toFixed(1).replace(".",",") + (sufijo||"%");
+}
+
+// Color de los stats. Dos criterios distintos, a proposito:
+//   tonoBaja  -> deuda y presion tributaria: bajar es la buena noticia.
+//   tonoSigno -> resultado fiscal y cuenta corriente: el signo ya dice todo
+//                (superavit verde, deficit rojo).
+// El gasto en pesos corrientes va sin color: con inflacion alta, una suba
+// nominal no significa nada por si sola.
+function tonoBaja(v){ return v<0 ? "pos" : (v>0 ? "neg" : ""); }
+function tonoSigno(v){ return v<0 ? "neg" : (v>0 ? "pos" : ""); }
+
+function setStat(id, valor, tono){
+  var el = document.getElementById(id);
+  if(!el) return;
+  el.textContent = valor;
+  el.className = "stat-value" + (tono ? " " + tono : "");
+}
+function setLabel(id, texto){
+  var el = document.getElementById(id);
+  if(el) el.textContent = texto;
+}
+
+// Toda serie del sitio se lee de data/<slug>.json, que es lo que export_json.py
+// vuelca desde la base. Es el unico camino: no hay panel que consulte una API
+// externa desde el navegador.
+function fetchSerie(slug){
+  return fetch("/data/"+slug+".json")
+    .then(function(res){
+      if(!res.ok) throw new Error("HTTP "+res.status);
+      return res.json();
+    })
+    .then(function(json){ return json.datos || []; });
+}
+
+// Busca el punto del mismo mes/trimestre del anio anterior, para variaciones
+// interanuales. Devuelve null si la muestra no lo tiene (es lo habitual: varias
+// de estas series son puntos sueltos, no series continuas).
+function puntoAnioAnterior(rows, fecha){
+  var objetivo = (parseInt(fecha.slice(0,4),10) - 1) + fecha.slice(4);
+  for(var i=0;i<rows.length;i++){ if(rows[i].fecha===objetivo) return rows[i]; }
+  return null;
+}
+
+// ===================================================================
+// Overlay de presidencias — compartido por TODOS los graficos.
+// Dibuja bandas de color de fondo por periodo presidencial, lineas
+// verticales en cada traspaso y el apellido arriba; ademas una leyenda
+// de chips (presidente · partido). Un boton "Marcar presidencias" se
+// inyecta solo en cada panel via setupPresidencias(canvasId, rows).
+// Funciona en lineas y barras porque se posiciona con el pixel real de
+// cada punto (meta.data[i].x), sin depender del tipo de eje.
+// ===================================================================
+var PRES = [
+  { n:"Menem",        p:"PJ",              desde:"1989-07-08", color:"#6b8fa6" },
+  { n:"De la Rúa",    p:"Alianza (UCR)",   desde:"1999-12-10", color:"#8a9a5b" },
+  { n:"Duhalde",      p:"PJ (interinato)", desde:"2001-12-21", color:"#b98c4a" },
+  { n:"N. Kirchner",  p:"PJ / FpV",        desde:"2003-05-25", color:"#4f6d89" },
+  { n:"C. Fernández", p:"PJ / FpV",        desde:"2007-12-10", color:"#6d8c86" },
+  { n:"Macri",        p:"PRO / Cambiemos", desde:"2015-12-10", color:"#a2503a" },
+  { n:"A. Fernández", p:"PJ / FdT",        desde:"2019-12-10", color:"#7a6a99" },
+  { n:"Milei",        p:"LLA",             desde:"2023-12-10", color:"#27384a" }
+];
+function presIdx(fecha){ var k=0; for(var i=0;i<PRES.length;i++){ if(fecha>=PRES[i].desde) k=i; } return k; }
+function hexA(hex,a){ var n=parseInt(hex.slice(1),16); return "rgba("+((n>>16)&255)+","+((n>>8)&255)+","+(n&255)+","+a+")"; }
+function computeRuns(rows){
+  var runs=[], s=0;
+  for(var i=1;i<=rows.length;i++){
+    if(i===rows.length || presIdx(rows[i].fecha)!==presIdx(rows[s].fecha)){
+      runs.push({ s:s, e:i-1, pres:PRES[presIdx(rows[s].fecha)] }); s=i;
+    }
+  }
+  return runs;
+}
+var CHART_REG = {};
+function _bordes(run, meta, area, n){
+  var left  = run.s===0   ? area.left  : (meta.data[run.s-1].x + meta.data[run.s].x)/2;
+  var right = run.e===n-1 ? area.right : (meta.data[run.e].x   + meta.data[run.e+1].x)/2;
+  return [left, right];
+}
+if(window.Chart){
+  Chart.register({
+    id:"presidencias",
+    beforeDatasetsDraw:function(chart){
+      var reg=CHART_REG[chart.canvas.id]; if(!reg||!reg.on||!reg.runs) return;
+      var meta=chart.getDatasetMeta(0); if(!meta||!meta.data||meta.data.length!==reg.rows.length) return;
+      var ctx=chart.ctx, area=chart.chartArea, n=reg.rows.length;
+      ctx.save();
+      reg.runs.forEach(function(run){ var b=_bordes(run,meta,area,n);
+        ctx.fillStyle=hexA(run.pres.color,0.11); ctx.fillRect(b[0],area.top,b[1]-b[0],area.bottom-area.top); });
+      ctx.restore();
+    },
+    afterDatasetsDraw:function(chart){
+      var reg=CHART_REG[chart.canvas.id]; if(!reg||!reg.on||!reg.runs) return;
+      var meta=chart.getDatasetMeta(0); if(!meta||!meta.data||meta.data.length!==reg.rows.length) return;
+      var ctx=chart.ctx, area=chart.chartArea, n=reg.rows.length;
+      ctx.save();
+      ctx.setLineDash([4,4]); ctx.strokeStyle="rgba(39,56,74,0.28)"; ctx.lineWidth=1;
+      reg.runs.forEach(function(run){ if(run.s>0){ var x=(meta.data[run.s-1].x + meta.data[run.s].x)/2;
+        ctx.beginPath(); ctx.moveTo(x,area.top); ctx.lineTo(x,area.bottom); ctx.stroke(); } });
+      ctx.setLineDash([]);
+      ctx.textAlign="center"; ctx.font="600 10px 'IBM Plex Mono', monospace";
+      reg.runs.forEach(function(run){ var b=_bordes(run,meta,area,n);
+        if(b[1]-b[0]>46){ ctx.fillStyle=run.pres.color; ctx.fillText(run.pres.n,(b[0]+b[1])/2,area.top+11); } });
+      ctx.restore();
+    }
+  });
+}
+function pintarChips(reg){
+  if(!reg.chips) return;
+  if(!reg.on){ reg.chips.innerHTML=""; reg.chips.style.display="none"; return; }
+  var vistas=[]; reg.rows.forEach(function(r){ var i=presIdx(r.fecha); if(vistas.indexOf(i)<0) vistas.push(i); });
+  vistas.sort(function(a,b){ return a-b; });
+  reg.chips.innerHTML = vistas.map(function(i){ var p=PRES[i];
+    return '<span class="pres-chip"><i style="background:'+p.color+'"></i>'+p.n+' · '+p.p+'</span>'; }).join("");
+  reg.chips.style.display="flex";
+}
+// Cada panel llama a esto tras crear su grafico. Inyecta el boton + la leyenda
+// una sola vez y deja todo listo para el toggle.
+function setupPresidencias(canvasId, rows){
+  var canvas=document.getElementById(canvasId); if(!canvas) return;
+  var reg=CHART_REG[canvasId]||(CHART_REG[canvasId]={on:false});
+  reg.rows=rows; reg.runs=computeRuns(rows);
+  if(!reg.btn){
+    var panel=canvas.closest(".chart-panel"); if(!panel) return;
+    var row=document.createElement("div"); row.className="pres-row";
+    var btn=document.createElement("button"); btn.className="pres-btn"; btn.textContent="Marcar presidencias";
+    row.appendChild(btn); panel.insertBefore(row, panel.firstChild);
+    var chips=document.createElement("div"); chips.className="pres-chips";
+    var wrap=panel.querySelector(".chart-wrap");
+    wrap.parentNode.insertBefore(chips, wrap.nextSibling);
+    reg.btn=btn; reg.chips=chips;
+    btn.addEventListener("click", function(){
+      reg.on=!reg.on; btn.classList.toggle("active",reg.on);
+      pintarChips(reg); var c=Chart.getChart(canvas); if(c) c.update();
+    });
+  }
+  pintarChips(reg);
+  var c=Chart.getChart(canvas); if(c && reg.on) c.update();
+}
+// Para graficos que cambian su ventana de datos (reservas, con rangos): mantiene
+// las bandas en sincronia con los puntos visibles.
+function actualizarPresRows(canvasId, rows){
+  var reg=CHART_REG[canvasId]; if(!reg) return;
+  reg.rows=rows; reg.runs=computeRuns(rows);
+  if(reg.on){ pintarChips(reg); var c=Chart.getChart(document.getElementById(canvasId)); if(c) c.update(); }
+}
+
+(function(){
+  var VISTAS = { home:"view-home", about:"view-about", indicadores:"view-indicadores",
+                 auth:"view-auth", perfil:"view-perfil",
+                 cursos:"view-cursos", capitulo:"view-capitulo",
+                 evaluacion:"view-evaluacion", certificaciones:"view-certificaciones" };
+  var dropdown = document.getElementById("dropdown-ind");
+  var RENDERS = {
+    deuda:renderDeuda, fiscal:renderFiscal, gasto:renderGasto, consolidada:renderConsolidada,
+    externa:renderExterna, neta:renderNeta, externo:renderExterno, gemelos:renderGemelos,
+    impositiva:renderImpositiva, cartera:renderCartera, residencia:renderResidencia,
+    reservas:function(){}
+  };
+
+  // Chart.js dibuja mal en un contenedor oculto (no tiene dimensiones). Cuando
+  // una vista/panel se vuelve visible, forzamos el resize de sus graficos.
+  function resizeCharts(container){
+    if(!container || !window.Chart) return;
+    container.querySelectorAll("canvas").forEach(function(cv){
+      var ch = Chart.getChart(cv);
+      if(ch) ch.resize();
+    });
+  }
+
+  function seleccionarPanel(name){
+    document.querySelectorAll(".idx-item[data-panel]").forEach(function(b){
+      b.classList.toggle("active", b.dataset.panel === name);
+    });
+    document.querySelectorAll(".panel").forEach(function(p){ p.classList.remove("visible"); });
+    var panel = document.getElementById("panel-"+name);
+    panel.classList.add("visible");
+    (RENDERS[name] || function(){})();   // cada render se auto-protege de re-dibujar
+    resizeCharts(panel);
+    fijarRuta("/indicadores/" + name);   // la URL siempre refleja que panel esta abierto
+  }
+
+  function mostrarVista(nombre){
+    document.querySelectorAll(".view").forEach(function(v){ v.classList.remove("visible"); });
+    document.getElementById(VISTAS[nombre] || "view-home").classList.add("visible");
+    document.querySelectorAll(".navlink").forEach(function(n){
+      n.classList.toggle("active", n.dataset.view === nombre);
+    });
+    window.scrollTo(0, 0);
+  }
+
+  // -------------------------------------------------------------- Router
+  // URLs reales (no solo clases CSS que se alternan): abrir un link directo,
+  // recargar la pagina, o usar atras/adelante del navegador tiene que llevar
+  // a la misma vista que ves si navegas haciendo clic.
+  //
+  //   /                                       home
+  //   /quienes-somos                          about
+  //   /indicadores[/<panel>]                  indicadores (default: reservas)
+  //   /cursos                                 cursos (catalogo)
+  //   /cursos/<curso>                         cursos (indice de un curso)
+  //   /cursos/<curso>/capitulos/<capitulo>     capitulo (lector)
+  //   /cursos/<curso>/evaluacion               evaluacion (rendir el examen)
+  //   /certificaciones                        certificaciones (seccion aparte de Cursos)
+  //   /cuenta                                 auth
+  //   /perfil                                 perfil (requiere sesion)
+  //
+  // "cursos"/"capitulo"/"evaluacion", "certificaciones" y "perfil" dependen de
+  // datos que este script no tiene (contenido de un curso, estado de examenes,
+  // si hay sesion): en vez de decidir esas vistas aca, este router dispara un
+  // evento y deja que assets/cursos.js / assets/certificaciones.js /
+  // assets/cuenta.js -- que si tienen ese estado -- terminen de resolverlas.
+  var RUTA_VISTA = { home:"/", about:"/quienes-somos", indicadores:"/indicadores",
+                      cursos:"/cursos", certificaciones:"/certificaciones",
+                      auth:"/cuenta", perfil:"/perfil" };
+
+  function analizarRuta(path){
+    var partes = path.replace(/^\/+|\/+$/g, "").split("/").filter(Boolean);
+    if(partes.length === 0) return {vista:"home"};
+    if(partes[0] === "quienes-somos") return {vista:"about"};
+    if(partes[0] === "indicadores") return {vista:"indicadores", panel: partes[1] || null};
+    if(partes[0] === "cuenta") return {vista:"auth"};
+    if(partes[0] === "perfil") return {vista:"perfil"};
+    if(partes[0] === "certificaciones") return {vista:"certificaciones"};
+    if(partes[0] === "cursos"){
+      var curso = partes[1] || null;
+      if(partes[2] === "evaluacion") return {vista:"evaluacion", curso: curso};
+      var capitulo = partes[2] === "capitulos" ? (partes[3] || null) : null;
+      return {vista: capitulo ? "capitulo" : "cursos", curso: curso, capitulo: capitulo};
+    }
+    return {vista:"home"};
+  }
+
+  function render(path){
+    var r = analizarRuta(path);
+
+    // El perfil necesita saber si hay sesion antes de decidir que mostrar
+    // (o redirige a /cuenta): eso lo sabe cuenta.js, no este archivo.
+    if(r.vista === "perfil"){
+      document.dispatchEvent(new CustomEvent("ruta-perfil"));
+      return;
+    }
+    // Certificaciones tambien requiere sesion (es un listado por usuario);
+    // se resuelve igual, con su propio evento.
+    if(r.vista === "certificaciones"){
+      document.dispatchEvent(new CustomEvent("ruta-certificaciones"));
+      return;
+    }
+
+    mostrarVista(r.vista);
+    if(r.vista === "home") renderPanorama();
+    if(r.vista === "indicadores") seleccionarPanel(r.panel || "reservas");
+    if(r.vista === "cursos" || r.vista === "capitulo" || r.vista === "evaluacion"){
+      document.dispatchEvent(new CustomEvent("ruta-cursos",
+        { detail: { curso: r.curso, capitulo: r.capitulo, evaluacion: r.vista === "evaluacion" } }));
+    }
+  }
+
+  // Navegacion "de verdad": nueva entrada en el historial + resolver la vista.
+  // {reemplazar:true} usa replaceState -- para redirecciones (ej. /perfil sin
+  // sesion -> /cuenta), donde "atras" no deberia devolver a la URL invalida.
+  function navegar(path, opciones){
+    var reemplazar = opciones && opciones.reemplazar;
+    if(location.pathname !== path){
+      if(reemplazar) history.replaceState(null, "", path);
+      else history.pushState(null, "", path);
+    }
+    render(path);
+  }
+
+  // Solo sincroniza la URL con lo que YA se esta mostrando (lo usan
+  // cursos.js/cuenta.js cuando ellos mismos deciden la vista, para no volver
+  // a disparar render() -- si no, entrarian en un loop con su propio estado).
+  function fijarRuta(path){
+    if(location.pathname !== path) history.pushState(null, "", path);
+  }
+
+  window.addEventListener("popstate", function(){ render(location.pathname); });
+
+  // Items del dropdown -> abren el panel dentro de la vista Indicadores.
+  document.querySelectorAll(".idx-item[data-panel]").forEach(function(btn){
+    btn.addEventListener("click", function(){
+      dropdown.classList.remove("open");
+      navegar("/indicadores/" + btn.dataset.panel);
+    });
+  });
+
+  // El propio boton "Indicadores" del header: despliega el menu y muestra la vista.
+  // Solo abre/cierra el menu -- no navega. Elegir un panel especifico (o el
+  // CTA "Ver los indicadores" de Home) es lo que efectivamente lleva a
+  // /indicadores; clickear el titulo del dropdown no deberia sacarte de
+  // donde estas.
+  dropdown.querySelector(".navlink").addEventListener("click", function(e){
+    e.stopPropagation();
+    dropdown.classList.toggle("open");
+  });
+
+  // Home / Quienes somos / marca / Cursos / CTA: cambian de vista y cierran el menu.
+  document.querySelectorAll("[data-view]").forEach(function(btn){
+    if(dropdown.contains(btn)) return;          // el de Indicadores ya se maneja arriba
+    btn.addEventListener("click", function(){
+      dropdown.classList.remove("open");
+      navegar(RUTA_VISTA[btn.dataset.view] || "/");
+    });
+  });
+
+  // Clic afuera cierra el dropdown.
+  document.addEventListener("click", function(e){
+    if(!dropdown.contains(e.target)) dropdown.classList.remove("open");
+  });
+
+  // API de navegacion para los modulos nuevos (assets/cuenta.js, assets/cursos.js).
+  // Hace falta porque el listener de [data-view] de arriba se engancha UNA sola
+  // vez, al arrancar: cualquier boton que esos modulos inyecten despues (el
+  // nombre del usuario en el header, "continuar curso") no tendria handler.
+  // Es puramente aditivo: nada del codigo existente lee window.Router.
+  window.Router = { mostrarVista: mostrarVista, seleccionarPanel: seleccionarPanel,
+                     navegar: navegar, fijarRuta: fijarRuta };
+
+  render(location.pathname);  // arranque: respeta la URL con la que se entro
+
+  function showFetchError(canvasId, mensaje){
+    var canvas = document.getElementById(canvasId);
+    var wrap = canvas.closest(".chart-wrap");
+    var p = document.createElement("div");
+    p.className = "chart-status err";
+    // OJO: no armar el nombre del archivo a partir de canvasId (ej.
+    // "chart-cartera" -> "data/cartera.json"): casi ningun panel fetchea un
+    // slug igual a su id de canvas (cartera pide cartera_cer.json +
+    // cartera_tasa_fija.json; fiscal pide dos series _usd; etc.), asi que ese
+    // nombre inventado casi siempre es incorrecto y confunde el diagnostico.
+    p.innerHTML = mensaje || "No se pudieron cargar los datos de este panel. Este fetch necesita que la página se sirva por http (no abierta como archivo local) y que la carpeta <code>data/</code> esté al lado de este HTML.";
+    canvas.style.display = "none";
+    wrap.appendChild(p);
+  }
+
+  function monthLabel(fechaISO){
+    var d = new Date(fechaISO+"T00:00:00");
+    // Segun el navegador, es-AR devuelve "dic 25" o "dic. 25": normalizamos a
+    // "dic-25", que es la convencion tipografica del resto de la pagina.
+    return d.toLocaleDateString("es-AR",{year:"2-digit",month:"short"})
+            .replace(/\./g,"").replace(/\s+(?:de\s+)?/,"-");
+  }
+  function quarterLabel(fechaISO){
+    var d = new Date(fechaISO+"T00:00:00");
+    var q = Math.floor(d.getMonth()/3)+1;
+    var roman = ["I","II","III","IV"][q-1];
+    return roman + "-" + String(d.getFullYear()).slice(-2);
+  }
+  function yearLabel(fechaISO){
+    return String(new Date(fechaISO+"T00:00:00").getFullYear());
+  }
+
+  function barrasSimple(canvasId, labels, data, color, tooltipFmt, axisFmt){
+    return new Chart(document.getElementById(canvasId), {
+      type:"bar",
+      data:{
+        labels: labels,
+        datasets:[{
+          data: data,
+          backgroundColor: color,
+          borderRadius:3,
+          maxBarThickness:70
+        }]
+      },
+      options:{
+        responsive:true,
+        maintainAspectRatio:false,
+        plugins:{
+          legend:{display:false},
+          tooltip:{
+            backgroundColor:"#27384a",
+            titleColor:"#fcfbf6",
+            bodyColor:"#fcfbf6",
+            borderColor:"rgba(252,251,246,0.28)",
+            borderWidth:1,
+            callbacks:{ label:function(ctx){ return tooltipFmt(ctx.parsed.y); } }
+          }
+        },
+        scales:{
+          x:{ grid:{display:false}, ticks:{color:"#5b6b7b",font:{family:"IBM Plex Mono",size:10}} },
+          y:{
+            grid:{color:"rgba(39,56,74,0.10)"},
+            ticks:{ color:"#5b6b7b", font:{family:"IBM Plex Mono",size:10}, callback:axisFmt }
+          }
+        }
+      }
+    });
+  }
+
+  // Grafico de linea para series temporales largas. Antes varias de estas eran
+  // de barras, que con 3 o 4 puntos servian; ahora que las series arrancan en
+  // los 2000 y traen decenas o cientos de puntos, la barra es ilegible y la
+  // linea es la forma correcta. Oculta los puntos cuando hay muchos, para que
+  // no se amontonen, y ralea las etiquetas del eje X.
+  // Resalta el gridline en y=0, para separar de un vistazo lo positivo de lo
+  // negativo (deficit/superavit, saldo externo). Sin plugins: es un color
+  // scriptable sobre el eje y.
+  function gridConCero(){
+    return {
+      color: function(ctx){ return ctx.tick.value === 0 ? "rgba(39,56,74,0.42)" : "rgba(39,56,74,0.10)"; },
+      lineWidth: function(ctx){ return ctx.tick.value === 0 ? 1.5 : 1; }
+    };
+  }
+
+  function lineaTemporal(canvasId, labels, datasets, axisFmt, opts){
+    opts = opts || {};
+    var n = labels.length;
+    datasets.forEach(function(ds){
+      ds.borderWidth = 2; ds.fill = ds.fill !== false;
+      ds.tension = 0.15;
+      ds.pointRadius = n > 40 ? 0 : (n > 18 ? 2 : 4);
+      ds.pointHoverRadius = 5;
+    });
+    return new Chart(document.getElementById(canvasId), {
+      type:"line",
+      data:{ labels: labels, datasets: datasets },
+      options:{
+        responsive:true, maintainAspectRatio:false,
+        interaction:{mode:"index",intersect:false},
+        plugins:{
+          legend:{ display: datasets.length > 1, position:"top", align:"end",
+                   labels:{color:"#27384a",font:{family:"Inter",size:11},boxWidth:12,padding:12} },
+          tooltip:{
+            backgroundColor:"#27384a", titleColor:"#fcfbf6", bodyColor:"#fcfbf6",
+            borderColor:"rgba(252,251,246,0.28)", borderWidth:1,
+            callbacks:{ label:function(ctx){ return (ctx.dataset.label? ctx.dataset.label+": ":"") + axisFmt(ctx.parsed.y); } }
+          }
+        },
+        scales:{
+          x:{ grid:{display:false}, ticks:{color:"#5b6b7b",maxRotation:0,autoSkip:true,
+              maxTicksLimit: n > 40 ? 8 : 12, font:{family:"IBM Plex Mono",size:10}} },
+          y:{ grid: opts.cero ? gridConCero() : {color:"rgba(39,56,74,0.10)"},
+              ticks:{color:"#5b6b7b",font:{family:"IBM Plex Mono",size:10},callback:axisFmt} }
+        }
+      }
+    });
+  }
+
+  // Barras de varias series por periodo. modo 'agrupadas' (una al lado de otra)
+  // o 'apiladas' (una sobre otra). Reusado por expo/impo y por la cartera.
+  function barrasComparadas(canvasId, labels, datasets, axisFmt, opts){
+    opts = opts || {};
+    var apiladas = opts.modo === "apiladas";
+    datasets.forEach(function(ds){ ds.borderRadius = apiladas ? 0 : 3; ds.maxBarThickness = 48; });
+    return new Chart(document.getElementById(canvasId), {
+      type:"bar",
+      data:{ labels: labels, datasets: datasets },
+      options:{
+        responsive:true, maintainAspectRatio:false,
+        interaction:{mode:"index",intersect:false},
+        plugins:{
+          legend:{ display:true, position:"top", align:"end",
+                   labels:{color:"#27384a",font:{family:"Inter",size:11},boxWidth:12,padding:12} },
+          tooltip:{ backgroundColor:"#27384a", titleColor:"#fcfbf6", bodyColor:"#fcfbf6",
+            borderColor:"rgba(252,251,246,0.28)", borderWidth:1,
+            callbacks:{ label:function(ctx){ return ctx.dataset.label + ": " + axisFmt(ctx.parsed.y); } } }
+        },
+        scales:{
+          x:{ stacked:apiladas, grid:{display:false}, ticks:{color:"#5b6b7b",maxRotation:0,autoSkip:true,
+              maxTicksLimit:14, font:{family:"IBM Plex Mono",size:10}} },
+          y:{ stacked:apiladas, grid: opts.cero ? gridConCero() : {color:"rgba(39,56,74,0.10)"},
+              ticks:{color:"#5b6b7b",font:{family:"IBM Plex Mono",size:10},callback:axisFmt} }
+        }
+      }
+    });
+  }
+
+  // Anio decimal (2003.4...) para ubicar cada punto de deuda en el tiempo REAL.
+  // El eje de deuda es lineal por tiempo, no por categoria: asi los 26 anios
+  // anuales (1993-2018) ocupan su ancho real y no quedan aplastados contra los
+  // meses de 2019+. El overlay de presidencias (bandas/lineas) es comun a todos
+  // los graficos y vive en setupPresidencias() mas arriba.
+  function decAnio(fecha){
+    var d = new Date(fecha + "T00:00:00");
+    return d.getFullYear() + (d.getMonth() + (d.getDate()-1)/31) / 12;
+  }
+
+  var deudaRendered = false;
+  function renderDeuda(){
+    if(deudaRendered) return;
+    deudaRendered = true;
+    fetchSerie("deuda_publica_bruta").then(function(rows){
+      var last = rows[rows.length-1];
+      var valores = rows.map(function(r){ return r.valor; });
+      setLabel("lbl-deuda-last", "Último dato (" + monthLabel(last.fecha) + ")");
+      setStat("stat-deuda-last", fmtUSD_M(last.valor));
+      var previo = puntoAnioAnterior(rows, last.fecha);
+      if(previo){
+        var pct = ((last.valor - previo.valor) / previo.valor) * 100;
+        setStat("stat-deuda-var", fmtPct(pct), tonoBaja(pct));
+      } else {
+        setStat("stat-deuda-var", "s/d");
+      }
+      setStat("stat-deuda-max", fmtUSD_M(Math.max.apply(null, valores)));
+      setStat("stat-deuda-min", fmtUSD_M(Math.min.apply(null, valores)));
+
+      var fmt = function(v){ return "US$ " + Math.round(v).toLocaleString("es-AR") + "M"; };
+      var pts = rows.map(function(r){ return { x: decAnio(r.fecha), y: r.valor }; });
+      new Chart(document.getElementById("chart-deuda"), {
+        type:"line",
+        data:{ datasets:[{ label:"Deuda pública bruta", data: pts,
+          borderColor:"#a2503a", backgroundColor:"rgba(162,80,58,0.10)",
+          borderWidth:2, tension:0.15, pointRadius:0, pointHoverRadius:5, fill:true }] },
+        options:{
+          responsive:true, maintainAspectRatio:false, interaction:{mode:"index",intersect:false},
+          plugins:{
+            legend:{display:false},
+            tooltip:{ backgroundColor:"#27384a", titleColor:"#fcfbf6", bodyColor:"#fcfbf6",
+              borderColor:"rgba(252,251,246,0.28)", borderWidth:1,
+              callbacks:{
+                title:function(items){ return monthLabel(rows[items[0].dataIndex].fecha); },
+                label:function(ctx){ return fmt(ctx.parsed.y); } } }
+          },
+          scales:{
+            x:{ type:"linear", grid:{display:false},
+                min: Math.floor(pts[0].x), max: Math.ceil(pts[pts.length-1].x),
+                ticks:{color:"#5b6b7b",maxTicksLimit:12,font:{family:"IBM Plex Mono",size:10},
+                       callback:function(v){ return Math.round(v); }} },
+            y:{ grid:{color:"rgba(39,56,74,0.10)"}, ticks:{color:"#5b6b7b",font:{family:"IBM Plex Mono",size:10},callback:fmt} }
+          }
+        }
+      });
+      setupPresidencias("chart-deuda", rows);
+    }).catch(function(){ showFetchError("chart-deuda"); });
+  }
+
+  var fiscalRendered = false;
+  function renderFiscal(){
+    if(fiscalRendered) return;
+    fiscalRendered = true;
+    // En dolares (blue): los pesos corrientes crecen con la inflacion y aplastan
+    // el grafico; el blue del mes lleva todo a una escala comparable en el tiempo.
+    Promise.all([fetchSerie("resultado_primario_usd"), fetchSerie("resultado_financiero_usd")])
+      .then(function(results){
+        var primario = results[0], financiero = results[1];
+        var labels = primario.map(function(r){ return monthLabel(r.fecha); });
+
+        var ultPrim = primario[primario.length-1];
+        var ultFin = financiero[financiero.length-1];
+        setLabel("lbl-fiscal-prim", "Primario (" + monthLabel(ultPrim.fecha) + ")");
+        setStat("stat-fiscal-prim", fmtUSD_delta(ultPrim.valor), tonoSigno(ultPrim.valor));
+        setLabel("lbl-fiscal-fin", "Financiero (" + monthLabel(ultFin.fecha) + ")");
+        setStat("stat-fiscal-fin", fmtUSD_delta(ultFin.valor), tonoSigno(ultFin.valor));
+        var peor = financiero.reduce(function(a,b){ return b.valor < a.valor ? b : a; });
+        setStat("stat-fiscal-peor", monthLabel(peor.fecha), "neg");
+
+        lineaTemporal("chart-fiscal", labels,
+          [{ label:"Resultado primario", data: primario.map(function(r){return r.valor;}),
+             borderColor:"#4f6d89", backgroundColor:"rgba(79,109,137,0.08)", fill:false },
+           { label:"Resultado financiero", data: financiero.map(function(r){return r.valor;}),
+             borderColor:"#a2503a", backgroundColor:"rgba(162,80,58,0.08)", fill:false }],
+          fmtUSD_delta, {cero:true});
+        setupPresidencias("chart-fiscal", primario);
+      }).catch(function(){ showFetchError("chart-fiscal"); });
+  }
+
+  var gastoRendered = false;
+  function renderGasto(){
+    if(gastoRendered) return;
+    gastoRendered = true;
+    // (h) gasto como % del PBI: cuantos puntos del PBI consume el Estado nacional.
+    fetchSerie("gasto_nacion_pbi").then(function(rows){
+      var last = rows[rows.length-1];
+      var prev = rows[rows.length-2];
+      var vals = rows.map(function(r){ return r.valor; });
+      setLabel("lbl-gasto-last", "Último dato (" + yearLabel(last.fecha) + ")");
+      setStat("stat-gasto-last", fmtNivel(last.valor, "% PBI"));
+      if(prev){
+        var delta = last.valor - prev.valor;
+        setLabel("lbl-gasto-ia", "Variación vs " + yearLabel(prev.fecha));
+        setStat("stat-gasto-ia", fmtPct(delta, " p.p."), tonoBaja(delta));
+      }
+      setStat("stat-gasto-max", fmtNivel(Math.max.apply(null, vals), "% PBI"));
+      setStat("stat-gasto-min", fmtNivel(Math.min.apply(null, vals), "% PBI"));
+      lineaTemporal("chart-gasto",
+        rows.map(function(r){ return yearLabel(r.fecha); }),
+        [{ label:"Gasto primario (% PBI)", data: vals,
+           borderColor:"#4f6d89", backgroundColor:"rgba(79,109,137,0.12)",
+           pointBackgroundColor:"#4f6d89" }],
+        function(v){ return fmtNivel(v, "% del PBI"); });
+      setupPresidencias("chart-gasto", rows);
+    }).catch(function(){ showFetchError("chart-gasto"); });
+  }
+
+  // Consolidada y neta tienen la misma forma: dos puntos sueltos de deuda, el
+  // delta entre ellos, y cuantos puntos verificados hay detras.
+  function statsExtremos(prefijo, rows){
+    var first = rows[0], last = rows[rows.length-1];
+    setLabel("lbl-"+prefijo+"-first", yearLabel(first.fecha));
+    setStat("stat-"+prefijo+"-first", fmtUSD_M(first.valor));
+    setLabel("lbl-"+prefijo+"-last", yearLabel(last.fecha));
+    setStat("stat-"+prefijo+"-last", fmtUSD_M(last.valor));
+    var delta = last.valor - first.valor;
+    setStat("stat-"+prefijo+"-delta", fmtUSD_delta(delta), tonoBaja(delta));
+    setStat("stat-"+prefijo+"-n", String(rows.length));
+  }
+
+  function lineaDeuda(canvasId, rows, color){
+    lineaTemporal(canvasId,
+      rows.map(function(r){ return yearLabel(r.fecha); }),
+      [{ label:"US$ millones", data: rows.map(function(r){ return r.valor; }),
+         borderColor:color, backgroundColor:"rgba(162,80,58,0.10)", pointBackgroundColor:color }],
+      function(v){ return "US$ " + Math.round(v).toLocaleString("es-AR") + "M"; });
+  }
+
+  var consolidadaRendered = false;
+  function renderConsolidada(){
+    if(consolidadaRendered) return;
+    consolidadaRendered = true;
+    fetchSerie("deuda_consolidada").then(function(rows){
+      statsExtremos("consolidada", rows);
+      lineaDeuda("chart-consolidada", rows, "#a2503a");
+      setupPresidencias("chart-consolidada", rows);
+    }).catch(function(){ showFetchError("chart-consolidada"); });
+  }
+
+  var externaRendered = false;
+  function renderExterna(){
+    if(externaRendered) return;
+    externaRendered = true;
+    fetchSerie("deuda_externa_bruta").then(function(rows){
+      var last = rows[rows.length-1];
+      setLabel("lbl-externa-last", "Último dato (" + quarterLabel(last.fecha) + ")");
+      setStat("stat-externa-last", fmtUSD_M(last.valor));
+      lineaTemporal("chart-externa",
+        rows.map(function(r){ return quarterLabel(r.fecha); }),
+        [{ label:"Deuda externa bruta", data: rows.map(function(r){ return r.valor; }),
+           borderColor:"#4f6d89", backgroundColor:"rgba(79,109,137,0.10)",
+           pointBackgroundColor:"#4f6d89" }],
+        function(v){ return "US$ " + Math.round(v).toLocaleString("es-AR") + "M"; });
+      setupPresidencias("chart-externa", rows);
+    }).catch(function(){ showFetchError("chart-externa"); });
+  }
+
+  var netaRendered = false;
+  function renderNeta(){
+    if(netaRendered) return;
+    netaRendered = true;
+    fetchSerie("deuda_neta").then(function(rows){
+      statsExtremos("neta", rows);
+      lineaDeuda("chart-neta", rows, "#a2503a");
+      setupPresidencias("chart-neta", rows);
+    }).catch(function(){ showFetchError("chart-neta"); });
+  }
+
+  var residenciaRendered = false;
+  function renderResidencia(){
+    if(residenciaRendered) return;
+    residenciaRendered = true;
+    // Deuda bruta de la Administracion Central partida por residencia del
+    // acreedor (hoja A.4.5 del boletin trimestral). Las dos series suman el
+    // total de esa hoja, asi que el % del exterior sale de ellas mismas.
+    Promise.all([fetchSerie("deuda_no_residentes"), fetchSerie("deuda_residentes")])
+      .then(function(results){
+        var noRes = results[0], res = results[1];
+        // Alineadas por fecha por si una serie tuviera un trimestre mas.
+        var resPorFecha = {};
+        res.forEach(function(r){ resPorFecha[r.fecha] = r.valor; });
+        var fechas = noRes.map(function(r){ return r.fecha; })
+                          .filter(function(f){ return f in resPorFecha; });
+        var noResV = fechas.map(function(f){
+          return noRes.find(function(x){ return x.fecha === f; }).valor; });
+        var resV = fechas.map(function(f){ return resPorFecha[f]; });
+
+        var i = fechas.length - 1;
+        var total = noResV[i] + resV[i];
+        setLabel("lbl-residencia-no", "No residentes (" + quarterLabel(fechas[i]) + ")");
+        setStat("stat-residencia-no", fmtUSD_M(noResV[i]));
+        setLabel("lbl-residencia-si", "Residentes (" + quarterLabel(fechas[i]) + ")");
+        setStat("stat-residencia-si", fmtUSD_M(resV[i]));
+        // Sin color: que la deuda este en manos del exterior o local no es en
+        // si mismo bueno ni malo, asi que no se editorializa con verde/rojo.
+        setStat("stat-residencia-pct", fmtNivel(noResV[i] / total * 100));
+        setStat("stat-residencia-cob", quarterLabel(fechas[0]) + " → " + quarterLabel(fechas[i]));
+
+        lineaTemporal("chart-residencia",
+          fechas.map(function(f){ return quarterLabel(f); }),
+          [{ label:"Acreedores del exterior (no residentes)", data: noResV,
+             borderColor:"#a2503a", backgroundColor:"rgba(162,80,58,0.08)", fill:false },
+           { label:"Acreedores locales (residentes)", data: resV,
+             borderColor:"#4f6d89", backgroundColor:"rgba(79,109,137,0.08)", fill:false }],
+          function(v){ return "US$ " + Math.round(v).toLocaleString("es-AR") + "M"; });
+        setupPresidencias("chart-residencia",
+          fechas.map(function(f){ return {fecha:f}; }));
+      }).catch(function(){ showFetchError("chart-residencia"); });
+  }
+
+  var externoRendered = false;
+  function renderExterno(){
+    if(externoRendered) return;
+    externoRendered = true;
+    // (f) dos barras por trimestre: lo exportado y lo importado.
+    Promise.all([fetchSerie("exportaciones"), fetchSerie("importaciones")])
+      .then(function(results){
+      var expo = results[0], impo = results[1];
+      // alineamos por fecha (por si una serie tiene un trimestre mas que la otra)
+      var impoPorFecha = {};
+      impo.forEach(function(r){ impoPorFecha[r.fecha] = r.valor; });
+      var fechas = expo.map(function(r){ return r.fecha; }).filter(function(f){ return f in impoPorFecha; });
+      var expoV = fechas.map(function(f){ var r = expo.find(function(x){return x.fecha===f;}); return r.valor; });
+      var impoV = fechas.map(function(f){ return impoPorFecha[f]; });
+
+      var i = fechas.length - 1;
+      var saldo = expoV[i] - impoV[i];
+      setLabel("lbl-externo-expo", "Exportado (" + quarterLabel(fechas[i]) + ")");
+      setStat("stat-externo-expo", fmtUSD_M(expoV[i]));
+      setLabel("lbl-externo-impo", "Importado (" + quarterLabel(fechas[i]) + ")");
+      setStat("stat-externo-impo", fmtUSD_M(impoV[i]));
+      setStat("stat-externo-saldo", fmtUSD_delta(saldo), tonoSigno(saldo));
+      setStat("stat-externo-cob", quarterLabel(fechas[0]) + " → hoy");
+
+      barrasComparadas("chart-externo",
+        fechas.map(function(f){ return quarterLabel(f); }),
+        [{ label:"Exportaciones", data: expoV, backgroundColor:"#4f6d89" },
+         { label:"Importaciones", data: impoV, backgroundColor:"#a2503a" }],
+        function(v){ return "US$ " + Math.round(v).toLocaleString("es-AR") + "M"; });
+      setupPresidencias("chart-externo", fechas.map(function(f){ return {fecha:f}; }));
+    }).catch(function(){ showFetchError("chart-externo"); });
+  }
+
+  var gemelosRendered = false;
+  function renderGemelos(){
+    if(gemelosRendered) return;
+    gemelosRendered = true;
+    // (g) un solo grafico: las dos patas en % del PBI, la fuente misma de los
+    // paneles 07 (fiscal) y 08 (externo). Comparten unidad, asi que van juntas.
+    Promise.all([fetchSerie("resultado_primario_anual_pbi"), fetchSerie("cuenta_corriente_pbi")])
+      .then(function(results){
+        var fiscalPorAnio = {}, externoPorAnio = {};
+        results[0].forEach(function(r){ fiscalPorAnio[yearLabel(r.fecha)] = r.valor; });
+        results[1].forEach(function(r){ externoPorAnio[yearLabel(r.fecha)] = r.valor; });
+        var years = Object.keys(fiscalPorAnio).filter(function(a){ return a in externoPorAnio; }).sort();
+        var fiscal = years.map(function(a){ return fiscalPorAnio[a]; });
+        var externo = years.map(function(a){ return externoPorAnio[a]; });
+
+        // Titulares: ultimo anio en comun + cuantos anios "gemelos" (mismo signo).
+        var ult = years[years.length-1];
+        var f = fiscalPorAnio[ult], e = externoPorAnio[ult];
+        setLabel("lbl-gemelos-1", "Fiscal (" + ult + ")");
+        setStat("stat-gemelos-1", fmtPct(f) + " PBI", tonoSigno(f));
+        setLabel("lbl-gemelos-2", "Externo (" + ult + ")");
+        setStat("stat-gemelos-2", fmtPct(e) + " PBI", tonoSigno(e));
+        var gemelos = years.filter(function(a){ return (fiscalPorAnio[a]<0)===(externoPorAnio[a]<0); }).length;
+        setStat("stat-gemelos-3", gemelos + " de " + years.length + " años");
+
+        lineaTemporal("chart-gemelos", years,
+          [{ label:"Resultado fiscal primario", data: fiscal,
+             borderColor:"#4f6d89", backgroundColor:"rgba(79,109,137,0.08)", fill:false },
+           { label:"Cuenta corriente", data: externo,
+             borderColor:"#a2503a", backgroundColor:"rgba(162,80,58,0.08)", fill:false }],
+          function(v){ return fmtPct(v) + " del PBI"; }, {cero:true});
+        setupPresidencias("chart-gemelos", years.map(function(y){ return {fecha:y+"-12-31"}; }));
+      }).catch(function(){ showFetchError("chart-gemelos"); });
+  }
+
+  var impositivaRendered = false;
+  function renderImpositiva(){
+    if(impositivaRendered) return;
+    impositivaRendered = true;
+    // Serie larga: presion tributaria nacional calculada (recaudacion / PBI),
+    // 2004 en adelante. La estimacion de IARAF (2 puntos) queda en la nota al pie.
+    fetchSerie("presion_tributaria_nacional").then(function(rows){
+      var last = rows[rows.length-1], prev = rows[rows.length-2], first = rows[0];
+      setLabel("lbl-impositiva-1", yearLabel(last.fecha));
+      setStat("stat-impositiva-1", fmtNivel(last.valor, "% PBI"));
+      setLabel("lbl-impositiva-2", yearLabel(first.fecha));
+      setStat("stat-impositiva-2", fmtNivel(first.valor, "% PBI"));
+      if(prev){
+        var delta = last.valor - prev.valor;
+        setStat("stat-impositiva-delta", fmtPct(delta, " p.p."), tonoBaja(delta));
+      }
+      lineaTemporal("chart-impositiva",
+        rows.map(function(r){ return yearLabel(r.fecha); }),
+        [{ label:"Presión tributaria nacional", data: rows.map(function(r){ return r.valor; }),
+           borderColor:"#a2503a", backgroundColor:"rgba(162,80,58,0.10)",
+           pointBackgroundColor:"#a2503a" }],
+        function(v){ return fmtNivel(v, "% del PBI"); });
+      setupPresidencias("chart-impositiva", rows);
+    }).catch(function(){ showFetchError("chart-impositiva"); });
+  }
+
+  var carteraRendered = false;
+  function renderCartera(){
+    if(carteraRendered) return;
+    carteraRendered = true;
+    // (d) barras apiladas por anio: CER vs no-CER, cada una % de la deuda en pesos.
+    Promise.all([fetchSerie("cartera_cer"), fetchSerie("cartera_tasa_fija")])
+      .then(function(results){
+        var cer = results[0], nocer = results[1];
+        var nocerPorFecha = {};
+        nocer.forEach(function(r){ nocerPorFecha[r.fecha] = r.valor; });
+        var fechas = cer.map(function(r){ return r.fecha; }).filter(function(f){ return f in nocerPorFecha; });
+
+        var ultCer = cer[cer.length-1];
+        setStat("stat-cartera-cer", fmtNivel(ultCer.valor));
+        setStat("stat-cartera-fija", fmtNivel(nocerPorFecha[ultCer.fecha]));
+        setLabel("lbl-cartera-cer", "Ajustable CER (" + yearLabel(ultCer.fecha) + ")");
+        setLabel("lbl-cartera-fija", "No ajustable (" + yearLabel(ultCer.fecha) + ")");
+        setStat("stat-cartera-corte", yearLabel(fechas[0]) + " → " + yearLabel(fechas[fechas.length-1]));
+
+        barrasComparadas("chart-cartera",
+          fechas.map(function(f){ return yearLabel(f); }),
+          [{ label:"Ajustable por CER", data: fechas.map(function(f){ var r=cer.find(function(x){return x.fecha===f;}); return r.valor; }), backgroundColor:"#a2503a" },
+           { label:"No ajustable por CER", data: fechas.map(function(f){ return nocerPorFecha[f]; }), backgroundColor:"#4f6d89" }],
+          function(v){ return fmtNivel(v); },
+          {modo:"apiladas"});
+        setupPresidencias("chart-cartera", fechas.map(function(f){ return {fecha:f}; }));
+      }).catch(function(){ showFetchError("chart-cartera"); });
+  }
+
+  // ------------------------------------------------------- Panorama (Home)
+  // Seis semaforos con el MISMO criterio de color que ya usa cada panel
+  // (tonoBaja para deuda/gasto/impositiva, tonoSigno para fiscal/externo/
+  // reservas) -- no es un juicio nuevo, es un resumen del que ya existe.
+  var panoramaRendered = false;
+  function renderPanorama(){
+    if(panoramaRendered) return;
+    panoramaRendered = true;
+    var cont = document.getElementById("panorama-grid");
+
+    function farol(panel, etiqueta){
+      var b = document.createElement("button");
+      b.className = "farol";
+      b.innerHTML =
+        '<div class="farol-punto"></div>' +
+        '<div class="farol-k">' + etiqueta + '</div>' +
+        '<div class="farol-v">—</div>' +
+        '<div class="farol-msg">Cargando…</div>';
+      b.addEventListener("click", function(){ navegar("/indicadores/" + panel); });
+      cont.appendChild(b);
+      return b;
+    }
+    function pintar(b, tono, valor, msg){
+      b.querySelector(".farol-punto").className = "farol-punto" + (tono ? " " + tono : "");
+      b.querySelector(".farol-v").textContent = valor;
+      b.querySelector(".farol-msg").textContent = msg;
+    }
+    function sinDato(b){ pintar(b, "", "s/d", "No se pudo cargar el dato."); }
+    // Variacion en valor absoluto, sin signo (el signo ya lo dice el punto de color).
+    function deltaAbs(v, suf){ return Math.abs(v).toFixed(1).replace(".",",") + (suf===undefined ? "%" : suf); }
+
+    var bReservas    = farol("reservas", "Reservas internacionales");
+    var bFiscal      = farol("fiscal", "Resultado fiscal");
+    var bExterno     = farol("externo", "Resultado externo");
+    var bDeuda       = farol("deuda", "Deuda pública bruta");
+    var bGasto       = farol("gasto", "Gasto de la Nación");
+    var bImpositiva  = farol("impositiva", "Carga impositiva");
+
+    // Reservas: variacion a 12 meses, buscada por fecha (serie diaria, no
+    // alcanza con contar filas) -- mismo enfoque que usa el panel de reservas.
+    fetchSerie("reservas_internacionales").then(function(rows){
+      var last = rows[rows.length-1];
+      var corte = new Date(last.fecha+"T00:00:00"); corte.setMonth(corte.getMonth()-12);
+      var corteISO = corte.toISOString().slice(0,10);
+      var previo = null;
+      for(var i=rows.length-1;i>=0;i--){ if(rows[i].fecha<=corteISO){ previo=rows[i]; break; } }
+      if(!previo){ pintar(bReservas, "", fmtUSD_M(last.valor), "Sin dato de hace 12 meses."); return; }
+      var pct = ((last.valor-previo.valor)/previo.valor)*100;
+      pintar(bReservas, tonoSigno(pct), fmtUSD_M(last.valor),
+        (pct>=0 ? "Suben " : "Bajan ") + deltaAbs(pct) + " en 12 meses.");
+    }).catch(function(){ sinDato(bReservas); });
+
+    // Fiscal: signo del resultado FINANCIERO del ultimo mes (ya neto de
+    // intereses -- es "cuanto le falto o le sobro al Tesoro", la version dura).
+    fetchSerie("resultado_financiero_usd").then(function(rows){
+      var last = rows[rows.length-1];
+      pintar(bFiscal, tonoSigno(last.valor), fmtUSD_delta(last.valor),
+        (last.valor>=0 ? "Superávit" : "Déficit") + " financiero en " + monthLabel(last.fecha) + ".");
+    }).catch(function(){ sinDato(bFiscal); });
+
+    // Externo: saldo comercial (expo - impo) del ultimo trimestre con dato en ambas series.
+    Promise.all([fetchSerie("exportaciones"), fetchSerie("importaciones")]).then(function(r){
+      var expo = r[0], impo = r[1];
+      var impoPorFecha = {}; impo.forEach(function(x){ impoPorFecha[x.fecha] = x.valor; });
+      var fechas = expo.map(function(x){ return x.fecha; }).filter(function(f){ return f in impoPorFecha; });
+      var f = fechas[fechas.length-1];
+      var e = expo.find(function(x){ return x.fecha===f; }).valor;
+      var saldo = e - impoPorFecha[f];
+      pintar(bExterno, tonoSigno(saldo), fmtUSD_delta(saldo),
+        (saldo>=0 ? "Superávit" : "Déficit") + " comercial en " + quarterLabel(f) + ".");
+    }).catch(function(){ sinDato(bExterno); });
+
+    // Deuda: variacion interanual del stock bruto -- bajar es la buena noticia.
+    fetchSerie("deuda_publica_bruta").then(function(rows){
+      var last = rows[rows.length-1];
+      var previo = puntoAnioAnterior(rows, last.fecha);
+      if(!previo){ pintar(bDeuda, "", fmtUSD_M(last.valor), "Sin dato de hace un año."); return; }
+      var pct = ((last.valor-previo.valor)/previo.valor)*100;
+      pintar(bDeuda, tonoBaja(pct), fmtUSD_M(last.valor),
+        (pct>=0 ? "Sube " : "Baja ") + deltaAbs(pct) + " en el último año.");
+    }).catch(function(){ sinDato(bDeuda); });
+
+    // Gasto (% PBI): variacion en puntos porcentuales vs el año anterior.
+    fetchSerie("gasto_nacion_pbi").then(function(rows){
+      var last = rows[rows.length-1], prev = rows[rows.length-2];
+      if(!prev){ pintar(bGasto, "", fmtNivel(last.valor,"% PBI"), "Sin dato del año anterior."); return; }
+      var delta = last.valor - prev.valor;
+      pintar(bGasto, tonoBaja(delta), fmtNivel(last.valor,"% PBI"),
+        (delta>=0 ? "Sube " : "Baja ") + deltaAbs(delta," p.p.") + " vs " + yearLabel(prev.fecha) + ".");
+    }).catch(function(){ sinDato(bGasto); });
+
+    // Carga impositiva: idem gasto, variacion en puntos porcentuales.
+    fetchSerie("presion_tributaria_nacional").then(function(rows){
+      var last = rows[rows.length-1], prev = rows[rows.length-2];
+      if(!prev){ pintar(bImpositiva, "", fmtNivel(last.valor,"% PBI"), "Sin dato del año anterior."); return; }
+      var delta = last.valor - prev.valor;
+      pintar(bImpositiva, tonoBaja(delta), fmtNivel(last.valor,"% PBI"),
+        (delta>=0 ? "Sube " : "Baja ") + deltaAbs(delta," p.p.") + " vs " + yearLabel(prev.fecha) + ".");
+    }).catch(function(){ sinDato(bImpositiva); });
+  }
+})();
+
+(function(){
+  // Reservas ya NO consulta la API externa desde el navegador: como todos los
+  // demas paneles, lee lo que el pipeline dejo en la base. Ademas de cumplir con
+  // que la base sea la fuente de verdad, esto arreglo un bug silencioso: la API
+  // corta en 5000 registros y la serie es diaria, asi que el fetch directo traia
+  // hasta 2016 y mostraba un valor de hace diez anios como "ultimo dato".
+  var statusEl = document.getElementById("chart-status");
+  var canvasEl = document.getElementById("chart");
+  var chart = null;
+  var fullData = [];
+
+  function restarMeses(fechaISO, meses){
+    var d = new Date(fechaISO+"T00:00:00");
+    d.setMonth(d.getMonth() - meses);
+    return d.toISOString().slice(0,10);
+  }
+
+  function computeStats(rows){
+    if(!rows.length) return;
+    var last = rows[rows.length-1];
+    setStat("stat-last", fmtUSD_M(last.valor));
+
+    // La serie es diaria: la variacion a 12 meses se busca por fecha, no
+    // contando filas hacia atras.
+    var corte = restarMeses(last.fecha, 12);
+    var previo = null;
+    for(var i=rows.length-1;i>=0;i--){
+      if(rows[i].fecha <= corte){ previo = rows[i]; break; }
+    }
+    if(previo){
+      var pct = ((last.valor - previo.valor) / previo.valor) * 100;
+      setStat("stat-var", fmtPct(pct), tonoSigno(pct));
+    } else {
+      setStat("stat-var", "s/d");
+    }
+
+    var vals = rows.map(function(r){return r.valor;});
+    setStat("stat-max", fmtUSD_M(Math.max.apply(null,vals)));
+    setStat("stat-min", fmtUSD_M(Math.min.apply(null,vals)));
+  }
+
+  function etiquetaFecha(fechaISO){
+    return new Date(fechaISO+"T00:00:00")
+      .toLocaleDateString("es-AR",{year:"numeric",month:"short"});
+  }
+
+  function renderChart(rows){
+    var labels = rows.map(function(r){ return etiquetaFecha(r.fecha); });
+    var values = rows.map(function(r){ return r.valor; });
+
+    statusEl.style.display = "none";
+    canvasEl.style.display = "block";
+
+    chart = new Chart(canvasEl, {
+      type:"line",
+      data:{
+        labels: labels,
+        datasets:[{
+          label:"Reservas internacionales (USD M)",
+          data: values,
+          borderColor:"#a2503a",
+          backgroundColor:"rgba(162,80,58,0.10)",
+          borderWidth:2,
+          pointRadius:0,
+          pointHoverRadius:4,
+          pointHoverBackgroundColor:"#a2503a",
+          fill:true,
+          tension:0.15
+        }]
+      },
+      options:{
+        responsive:true,
+        maintainAspectRatio:false,
+        interaction:{mode:"index",intersect:false},
+        plugins:{
+          legend:{display:false},
+          tooltip:{
+            backgroundColor:"#27384a",
+            titleColor:"#fcfbf6",
+            bodyColor:"#fcfbf6",
+            borderColor:"rgba(252,251,246,0.28)",
+            borderWidth:1,
+            callbacks:{
+              label:function(ctx){ return fmtUSD_M(ctx.parsed.y); }
+            }
+          }
+        },
+        scales:{
+          x:{
+            grid:{display:false},
+            ticks:{color:"#5b6b7b",maxRotation:0,autoSkip:true,maxTicksLimit:10,font:{family:"IBM Plex Mono",size:10}}
+          },
+          y:{
+            grid:{color:"rgba(39,56,74,0.10)"},
+            ticks:{
+              color:"#5b6b7b",
+              font:{family:"IBM Plex Mono",size:10},
+              callback:function(v){ return "$"+(v/1000).toFixed(0)+"k"; }
+            }
+          }
+        }
+      }
+    });
+  }
+
+  // El recorte es por fecha, no por cantidad de filas: la serie es diaria, asi
+  // que quedarse con las ultimas 24 filas serian 24 dias, no 24 meses.
+  function applyRange(meses){
+    var rows = fullData;
+    if(meses!=="all" && fullData.length){
+      var corte = restarMeses(fullData[fullData.length-1].fecha, parseInt(meses,10));
+      rows = fullData.filter(function(r){ return r.fecha >= corte; });
+    }
+    if(chart){
+      chart.data.labels = rows.map(function(r){ return etiquetaFecha(r.fecha); });
+      chart.data.datasets[0].data = rows.map(function(r){ return r.valor; });
+      chart.update();
+    }
+    computeStats(rows);
+    actualizarPresRows("chart", rows);   // bandas de presidencia en sync con el rango visible
+  }
+
+  document.getElementById("range-row").addEventListener("click", function(e){
+    var btn = e.target.closest(".range-btn");
+    if(!btn) return;
+    document.querySelectorAll(".range-btn").forEach(function(b){b.classList.remove("active");});
+    btn.classList.add("active");
+    applyRange(btn.dataset.range);
+  });
+
+  fetchSerie("reservas_internacionales")
+    .then(function(rows){
+      if(!rows.length) throw new Error("Serie vacía");
+      fullData = rows;
+      renderChart(rows);
+      computeStats(rows);
+      setupPresidencias("chart", rows);
+    })
+    .catch(function(err){
+      statusEl.className = "chart-status err";
+      statusEl.innerHTML = "No se pudo cargar <code>data/reservas_internacionales.json</code> (" + err.message + ").<br>Corré <code>python actualizar.py</code> y servi la página por HTTP (no la abras con doble clic).";
+    });
+
+  // Sello del encabezado: la fecha de la ultima ingesta exitosa, no la de hoy.
+  // Antes decia new Date(), o sea que mostraba la fecha actual aunque la ingesta
+  // estuviera rota hace dos semanas.
+  fetch("/data/_meta.json")
+    .then(function(res){ return res.ok ? res.json() : null; })
+    .then(function(meta){
+      var stampEl = document.getElementById("stamp-date");
+      if(meta && meta.ultima_ingesta_ok){
+        stampEl.textContent = new Date(meta.ultima_ingesta_ok)
+          .toLocaleDateString("es-AR",{year:"numeric",month:"long",day:"numeric"});
+      } else {
+        stampEl.textContent = "sin ingesta registrada";
+      }
+    })
+    .catch(function(){});
+})();
+</script>
+
+<!-- Modulos nuevos. Scripts CLASICOS a proposito: sin type="module" y sin
+     defer. El JS de arriba declara sus helpers en el scope global y estos
+     archivos los usan; con modulos dejarian de verse entre si y ademas
+     cambiaria el timing del Chart.register del plugin de presidencias. -->
+<script src="/assets/cuenta.js"></script>
+<script src="/assets/cursos.js"></script>
+<script src="/assets/certificaciones.js"></script>
+
+</body>
+</html>

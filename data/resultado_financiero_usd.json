@@ -1,0 +1,639 @@
+{
+  "indicador": "Resultado financiero del SPN, en dolares blue",
+  "unidad": "millones de USD",
+  "metodologia": "CALCULO PROPIO: resultado_financiero (ARS) / dolar blue promedio del mes.",
+  "fuente": "Resultado del Sector Publico Nacional",
+  "tipo_acceso_fuente": "scraping",
+  "datos": [
+    {
+      "fecha": "2016-01-31",
+      "valor": -156.94,
+      "provisorio": false
+    },
+    {
+      "fecha": "2016-02-29",
+      "valor": -1384.81,
+      "provisorio": false
+    },
+    {
+      "fecha": "2016-03-31",
+      "valor": -2684.99,
+      "provisorio": false
+    },
+    {
+      "fecha": "2016-04-30",
+      "valor": -1138.32,
+      "provisorio": false
+    },
+    {
+      "fecha": "2016-05-31",
+      "valor": -1599.57,
+      "provisorio": false
+    },
+    {
+      "fecha": "2016-06-30",
+      "valor": -5076.03,
+      "provisorio": false
+    },
+    {
+      "fecha": "2016-07-31",
+      "valor": -1826.77,
+      "provisorio": false
+    },
+    {
+      "fecha": "2016-08-31",
+      "valor": -2562.82,
+      "provisorio": false
+    },
+    {
+      "fecha": "2016-09-30",
+      "valor": -3167.15,
+      "provisorio": false
+    },
+    {
+      "fecha": "2016-10-31",
+      "valor": -4843.77,
+      "provisorio": false
+    },
+    {
+      "fecha": "2016-11-30",
+      "valor": -1272.96,
+      "provisorio": false
+    },
+    {
+      "fecha": "2016-12-31",
+      "valor": -5066.45,
+      "provisorio": false
+    },
+    {
+      "fecha": "2017-01-31",
+      "valor": -326.82,
+      "provisorio": false
+    },
+    {
+      "fecha": "2017-02-28",
+      "valor": -1866.82,
+      "provisorio": false
+    },
+    {
+      "fecha": "2017-03-31",
+      "valor": -2192.59,
+      "provisorio": false
+    },
+    {
+      "fecha": "2017-04-30",
+      "valor": -3063.24,
+      "provisorio": false
+    },
+    {
+      "fecha": "2017-05-31",
+      "valor": -2752.83,
+      "provisorio": false
+    },
+    {
+      "fecha": "2017-06-30",
+      "valor": -5566.8,
+      "provisorio": false
+    },
+    {
+      "fecha": "2017-07-31",
+      "valor": -1858.09,
+      "provisorio": false
+    },
+    {
+      "fecha": "2017-08-31",
+      "valor": -1752.51,
+      "provisorio": false
+    },
+    {
+      "fecha": "2017-09-30",
+      "valor": -2843.14,
+      "provisorio": false
+    },
+    {
+      "fecha": "2017-10-31",
+      "valor": -3440.64,
+      "provisorio": false
+    },
+    {
+      "fecha": "2017-11-30",
+      "valor": -2556.72,
+      "provisorio": false
+    },
+    {
+      "fecha": "2017-12-31",
+      "valor": -8261.29,
+      "provisorio": false
+    },
+    {
+      "fecha": "2018-01-31",
+      "valor": -1346.3,
+      "provisorio": false
+    },
+    {
+      "fecha": "2018-02-28",
+      "valor": -1386.88,
+      "provisorio": false
+    },
+    {
+      "fecha": "2018-03-31",
+      "valor": -1815.81,
+      "provisorio": false
+    },
+    {
+      "fecha": "2018-04-30",
+      "valor": -2069.48,
+      "provisorio": false
+    },
+    {
+      "fecha": "2018-05-31",
+      "valor": -1125.53,
+      "provisorio": false
+    },
+    {
+      "fecha": "2018-06-30",
+      "valor": -3246.83,
+      "provisorio": false
+    },
+    {
+      "fecha": "2018-07-31",
+      "valor": -2155.49,
+      "provisorio": false
+    },
+    {
+      "fecha": "2018-08-31",
+      "valor": -477.23,
+      "provisorio": false
+    },
+    {
+      "fecha": "2018-09-30",
+      "valor": -1427.5,
+      "provisorio": false
+    },
+    {
+      "fecha": "2018-10-31",
+      "valor": -2064.49,
+      "provisorio": false
+    },
+    {
+      "fecha": "2018-11-30",
+      "valor": -1996.83,
+      "provisorio": false
+    },
+    {
+      "fecha": "2018-12-31",
+      "valor": -5009.72,
+      "provisorio": false
+    },
+    {
+      "fecha": "2019-01-31",
+      "valor": -1538.25,
+      "provisorio": false
+    },
+    {
+      "fecha": "2019-02-28",
+      "valor": -127.66,
+      "provisorio": false
+    },
+    {
+      "fecha": "2019-03-31",
+      "valor": -1207.03,
+      "provisorio": false
+    },
+    {
+      "fecha": "2019-04-30",
+      "valor": -1492.5,
+      "provisorio": false
+    },
+    {
+      "fecha": "2019-05-31",
+      "valor": -839.87,
+      "provisorio": false
+    },
+    {
+      "fecha": "2019-06-30",
+      "valor": -1502.38,
+      "provisorio": false
+    },
+    {
+      "fecha": "2019-07-31",
+      "valor": -1779.0,
+      "provisorio": false
+    },
+    {
+      "fecha": "2019-08-31",
+      "valor": -272.07,
+      "provisorio": false
+    },
+    {
+      "fecha": "2019-09-30",
+      "valor": -1242.85,
+      "provisorio": false
+    },
+    {
+      "fecha": "2019-10-31",
+      "valor": -979.23,
+      "provisorio": false
+    },
+    {
+      "fecha": "2019-11-30",
+      "valor": -1101.14,
+      "provisorio": false
+    },
+    {
+      "fecha": "2019-12-31",
+      "valor": -3100.02,
+      "provisorio": false
+    },
+    {
+      "fecha": "2020-01-31",
+      "valor": -1173.05,
+      "provisorio": false
+    },
+    {
+      "fecha": "2020-02-29",
+      "valor": -862.95,
+      "provisorio": false
+    },
+    {
+      "fecha": "2020-03-31",
+      "valor": -2015.33,
+      "provisorio": false
+    },
+    {
+      "fecha": "2020-04-30",
+      "valor": -2699.09,
+      "provisorio": false
+    },
+    {
+      "fecha": "2020-05-31",
+      "valor": -2457.1,
+      "provisorio": false
+    },
+    {
+      "fecha": "2020-06-30",
+      "valor": -2292.75,
+      "provisorio": false
+    },
+    {
+      "fecha": "2020-07-31",
+      "valor": -1445.86,
+      "provisorio": false
+    },
+    {
+      "fecha": "2020-08-31",
+      "valor": -1087.75,
+      "provisorio": false
+    },
+    {
+      "fecha": "2020-09-30",
+      "valor": -1536.94,
+      "provisorio": false
+    },
+    {
+      "fecha": "2020-10-31",
+      "valor": -661.17,
+      "provisorio": false
+    },
+    {
+      "fecha": "2020-11-30",
+      "valor": -791.81,
+      "provisorio": false
+    },
+    {
+      "fecha": "2020-12-31",
+      "valor": -2071.38,
+      "provisorio": false
+    },
+    {
+      "fecha": "2021-01-31",
+      "valor": -19.13,
+      "provisorio": false
+    },
+    {
+      "fecha": "2021-02-28",
+      "valor": -430.93,
+      "provisorio": false
+    },
+    {
+      "fecha": "2021-03-31",
+      "valor": -815.87,
+      "provisorio": false
+    },
+    {
+      "fecha": "2021-04-30",
+      "valor": -391.36,
+      "provisorio": false
+    },
+    {
+      "fecha": "2021-05-31",
+      "valor": -420.91,
+      "provisorio": false
+    },
+    {
+      "fecha": "2021-06-30",
+      "valor": -1282.91,
+      "provisorio": false
+    },
+    {
+      "fecha": "2021-07-31",
+      "valor": -917.79,
+      "provisorio": false
+    },
+    {
+      "fecha": "2021-08-31",
+      "valor": -1069.53,
+      "provisorio": false
+    },
+    {
+      "fecha": "2021-09-30",
+      "valor": 1287.8,
+      "provisorio": false
+    },
+    {
+      "fecha": "2021-10-31",
+      "valor": -1467.58,
+      "provisorio": false
+    },
+    {
+      "fecha": "2021-11-30",
+      "valor": -1206.34,
+      "provisorio": false
+    },
+    {
+      "fecha": "2021-12-31",
+      "valor": -2550.54,
+      "provisorio": false
+    },
+    {
+      "fecha": "2022-01-31",
+      "valor": -710.85,
+      "provisorio": false
+    },
+    {
+      "fecha": "2022-02-28",
+      "valor": -640.91,
+      "provisorio": false
+    },
+    {
+      "fecha": "2022-03-31",
+      "valor": -851.25,
+      "provisorio": false
+    },
+    {
+      "fecha": "2022-04-30",
+      "valor": -734.36,
+      "provisorio": false
+    },
+    {
+      "fecha": "2022-05-31",
+      "valor": -1184.45,
+      "provisorio": false
+    },
+    {
+      "fecha": "2022-06-30",
+      "valor": -1817.25,
+      "provisorio": false
+    },
+    {
+      "fecha": "2022-07-31",
+      "valor": -452.82,
+      "provisorio": false
+    },
+    {
+      "fecha": "2022-08-31",
+      "valor": -1263.89,
+      "provisorio": false
+    },
+    {
+      "fecha": "2022-09-30",
+      "valor": -15.78,
+      "provisorio": false
+    },
+    {
+      "fecha": "2022-10-31",
+      "valor": -645.25,
+      "provisorio": false
+    },
+    {
+      "fecha": "2022-11-30",
+      "valor": -1759.2,
+      "provisorio": false
+    },
+    {
+      "fecha": "2022-12-31",
+      "valor": -2096.58,
+      "provisorio": false
+    },
+    {
+      "fecha": "2023-01-31",
+      "valor": -1458.98,
+      "provisorio": false
+    },
+    {
+      "fecha": "2023-02-28",
+      "valor": -1285.31,
+      "provisorio": false
+    },
+    {
+      "fecha": "2023-03-31",
+      "valor": -1012.96,
+      "provisorio": false
+    },
+    {
+      "fecha": "2023-04-30",
+      "valor": -966.18,
+      "provisorio": false
+    },
+    {
+      "fecha": "2023-05-31",
+      "valor": -1310.09,
+      "provisorio": false
+    },
+    {
+      "fecha": "2023-06-30",
+      "valor": -1445.19,
+      "provisorio": false
+    },
+    {
+      "fecha": "2023-07-31",
+      "valor": -1453.12,
+      "provisorio": false
+    },
+    {
+      "fecha": "2023-08-31",
+      "valor": -569.09,
+      "provisorio": false
+    },
+    {
+      "fecha": "2023-09-30",
+      "valor": -691.35,
+      "provisorio": false
+    },
+    {
+      "fecha": "2023-10-31",
+      "valor": -479.74,
+      "provisorio": false
+    },
+    {
+      "fecha": "2023-11-30",
+      "valor": -790.19,
+      "provisorio": false
+    },
+    {
+      "fecha": "2023-12-31",
+      "valor": -2422.86,
+      "provisorio": false
+    },
+    {
+      "fecha": "2024-01-31",
+      "valor": 450.28,
+      "provisorio": false
+    },
+    {
+      "fecha": "2024-02-29",
+      "valor": 302.98,
+      "provisorio": false
+    },
+    {
+      "fecha": "2024-03-31",
+      "valor": 272.17,
+      "provisorio": false
+    },
+    {
+      "fecha": "2024-04-30",
+      "valor": 17.09,
+      "provisorio": false
+    },
+    {
+      "fecha": "2024-05-31",
+      "valor": 1044.39,
+      "provisorio": false
+    },
+    {
+      "fecha": "2024-06-30",
+      "valor": 183.82,
+      "provisorio": false
+    },
+    {
+      "fecha": "2024-07-31",
+      "valor": -419.87,
+      "provisorio": false
+    },
+    {
+      "fecha": "2024-08-31",
+      "valor": 2.6,
+      "provisorio": false
+    },
+    {
+      "fecha": "2024-09-30",
+      "valor": 369.02,
+      "provisorio": false
+    },
+    {
+      "fecha": "2024-10-31",
+      "valor": 433.65,
+      "provisorio": false
+    },
+    {
+      "fecha": "2024-11-30",
+      "valor": 314.09,
+      "provisorio": false
+    },
+    {
+      "fecha": "2024-12-31",
+      "valor": -1364.69,
+      "provisorio": false
+    },
+    {
+      "fecha": "2025-01-31",
+      "valor": 488.81,
+      "provisorio": false
+    },
+    {
+      "fecha": "2025-02-28",
+      "valor": 254.02,
+      "provisorio": false
+    },
+    {
+      "fecha": "2025-03-31",
+      "valor": 316.83,
+      "provisorio": false
+    },
+    {
+      "fecha": "2025-04-30",
+      "valor": 450.42,
+      "provisorio": false
+    },
+    {
+      "fecha": "2025-05-31",
+      "valor": 564.6,
+      "provisorio": false
+    },
+    {
+      "fecha": "2025-06-30",
+      "valor": 462.67,
+      "provisorio": false
+    },
+    {
+      "fecha": "2025-07-31",
+      "valor": -130.11,
+      "provisorio": false
+    },
+    {
+      "fecha": "2025-08-31",
+      "valor": 291.79,
+      "provisorio": false
+    },
+    {
+      "fecha": "2025-09-30",
+      "valor": 218.04,
+      "provisorio": false
+    },
+    {
+      "fecha": "2025-10-31",
+      "valor": 351.74,
+      "provisorio": false
+    },
+    {
+      "fecha": "2025-11-30",
+      "valor": 418.01,
+      "provisorio": false
+    },
+    {
+      "fecha": "2025-12-31",
+      "valor": -2228.42,
+      "provisorio": false
+    },
+    {
+      "fecha": "2026-01-31",
+      "valor": 735.66,
+      "provisorio": false
+    },
+    {
+      "fecha": "2026-02-28",
+      "valor": 100.57,
+      "provisorio": false
+    },
+    {
+      "fecha": "2026-03-31",
+      "valor": 341.18,
+      "provisorio": false
+    },
+    {
+      "fecha": "2026-04-30",
+      "valor": 190.42,
+      "provisorio": false
+    },
+    {
+      "fecha": "2026-05-31",
+      "valor": 337.39,
+      "provisorio": false
+    },
+    {
+      "fecha": "2026-06-30",
+      "valor": -695.91,
+      "provisorio": false
+    }
+  ]
+}

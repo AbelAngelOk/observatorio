@@ -1,0 +1,119 @@
+{
+  "indicador": "PBI a precios corrientes, anual",
+  "unidad": "millones de ARS",
+  "metodologia": "INDEC via API de series (9.1_PPC_2004_A_22). Base 2004: la serie no existe antes de ese anio.",
+  "fuente": "API de series de tiempo",
+  "tipo_acceso_fuente": "api",
+  "datos": [
+    {
+      "fecha": "2004-12-31",
+      "valor": 485115.19472475466,
+      "provisorio": false
+    },
+    {
+      "fecha": "2005-12-31",
+      "valor": 582538.1729372747,
+      "provisorio": false
+    },
+    {
+      "fecha": "2006-12-31",
+      "valor": 715904.2717338485,
+      "provisorio": false
+    },
+    {
+      "fecha": "2007-12-31",
+      "valor": 896980.174071903,
+      "provisorio": false
+    },
+    {
+      "fecha": "2008-12-31",
+      "valor": 1149646.0905836353,
+      "provisorio": false
+    },
+    {
+      "fecha": "2009-12-31",
+      "valor": 1247929.2689250195,
+      "provisorio": false
+    },
+    {
+      "fecha": "2010-12-31",
+      "valor": 1661720.9259445816,
+      "provisorio": false
+    },
+    {
+      "fecha": "2011-12-31",
+      "valor": 2179024.103630777,
+      "provisorio": false
+    },
+    {
+      "fecha": "2012-12-31",
+      "valor": 2637913.8482155497,
+      "provisorio": false
+    },
+    {
+      "fecha": "2013-12-31",
+      "valor": 3348308.4882272054,
+      "provisorio": false
+    },
+    {
+      "fecha": "2014-12-31",
+      "valor": 4579086.425410099,
+      "provisorio": false
+    },
+    {
+      "fecha": "2015-12-31",
+      "valor": 5954510.895692341,
+      "provisorio": false
+    },
+    {
+      "fecha": "2016-12-31",
+      "valor": 8228159.556536429,
+      "provisorio": false
+    },
+    {
+      "fecha": "2017-12-31",
+      "valor": 10660228.494808454,
+      "provisorio": false
+    },
+    {
+      "fecha": "2018-12-31",
+      "valor": 14744810.677265815,
+      "provisorio": false
+    },
+    {
+      "fecha": "2019-12-31",
+      "valor": 21558444.149200603,
+      "provisorio": false
+    },
+    {
+      "fecha": "2020-12-31",
+      "valor": 27209814.1432876,
+      "provisorio": false
+    },
+    {
+      "fecha": "2021-12-31",
+      "valor": 46219083.5103038,
+      "provisorio": false
+    },
+    {
+      "fecha": "2022-12-31",
+      "valor": 82810045.46986668,
+      "provisorio": false
+    },
+    {
+      "fecha": "2023-12-31",
+      "valor": 193946178.6155237,
+      "provisorio": false
+    },
+    {
+      "fecha": "2024-12-31",
+      "valor": 584377011.02669,
+      "provisorio": false
+    },
+    {
+      "fecha": "2025-12-31",
+      "valor": 850239798.2248749,
+      "provisorio": false
+    }
+  ]
+}

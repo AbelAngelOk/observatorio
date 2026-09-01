@@ -1,0 +1,134 @@
+{
+  "indicador": "Deuda bruta + pasivos remunerados BCRA",
+  "unidad": "millones de USD",
+  "metodologia": "CALCULO PROPIO anual: deuda publica bruta + pasivos remunerados del BCRA (Leliq + pases + titulos), al TC oficial de cierre de anio. NO resta las tenencias intra-sector publico (Letras Intransferibles, Adelantos Transitorios) porque ese dato no se publica como serie limpia: es una aproximacion, no la cifra exacta de Chequeado.",
+  "fuente": "Boletin mensual de deuda",
+  "tipo_acceso_fuente": "scraping",
+  "datos": [
+    {
+      "fecha": "2002-12-31",
+      "valor": 154176.0,
+      "provisorio": false
+    },
+    {
+      "fecha": "2003-12-31",
+      "valor": 182614.3,
+      "provisorio": false
+    },
+    {
+      "fecha": "2004-12-31",
+      "valor": 199630.1,
+      "provisorio": false
+    },
+    {
+      "fecha": "2005-12-31",
+      "valor": 166718.3,
+      "provisorio": false
+    },
+    {
+      "fecha": "2006-12-31",
+      "valor": 178815.4,
+      "provisorio": false
+    },
+    {
+      "fecha": "2007-12-31",
+      "valor": 195017.4,
+      "provisorio": false
+    },
+    {
+      "fecha": "2008-12-31",
+      "valor": 194509.9,
+      "provisorio": false
+    },
+    {
+      "fecha": "2009-12-31",
+      "valor": 196411.0,
+      "provisorio": false
+    },
+    {
+      "fecha": "2010-12-31",
+      "valor": 204101.3,
+      "provisorio": false
+    },
+    {
+      "fecha": "2011-12-31",
+      "valor": 216718.2,
+      "provisorio": false
+    },
+    {
+      "fecha": "2012-12-31",
+      "valor": 237228.4,
+      "provisorio": false
+    },
+    {
+      "fecha": "2013-12-31",
+      "valor": 240400.3,
+      "provisorio": false
+    },
+    {
+      "fecha": "2014-12-31",
+      "valor": 270303.9,
+      "provisorio": false
+    },
+    {
+      "fecha": "2015-12-31",
+      "valor": 272721.3,
+      "provisorio": false
+    },
+    {
+      "fecha": "2016-12-31",
+      "valor": 319510.2,
+      "provisorio": false
+    },
+    {
+      "fecha": "2017-12-31",
+      "valor": 382739.4,
+      "provisorio": false
+    },
+    {
+      "fecha": "2018-12-31",
+      "valor": 351635.0,
+      "provisorio": false
+    },
+    {
+      "fecha": "2019-12-31",
+      "valor": 342756.0,
+      "provisorio": false
+    },
+    {
+      "fecha": "2020-12-31",
+      "valor": 372933.3,
+      "provisorio": false
+    },
+    {
+      "fecha": "2021-12-31",
+      "valor": 419423.6,
+      "provisorio": false
+    },
+    {
+      "fecha": "2022-12-31",
+      "valor": 456433.0,
+      "provisorio": false
+    },
+    {
+      "fecha": "2023-11-30",
+      "valor": 495599.0,
+      "provisorio": true
+    },
+    {
+      "fecha": "2023-12-31",
+      "valor": 420768.5,
+      "provisorio": false
+    },
+    {
+      "fecha": "2024-12-31",
+      "valor": 476046.3,
+      "provisorio": false
+    },
+    {
+      "fecha": "2025-12-31",
+      "valor": 455067.0,
+      "provisorio": false
+    }
+  ]
+}

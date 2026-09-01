@@ -1,0 +1,71 @@
+name: Ingesta diaria
+
+# El punto 4 del proyecto: la ingesta corre sola todos los dias, sin que nadie
+# la dispare. Actions es el "servidor 24/7" -- no hay maquina que mantener.
+#
+# La corrida es idempotente: si ninguna fuente publico nada nuevo, core.insertar_
+# observacion() no escribe ninguna fila, el commit no tiene cambios y el job
+# termina sin tocar el repo. Solo hay commit cuando hay dato nuevo o revisado.
+
+on:
+  schedule:
+    - cron: "0 9 * * *"   # 09:00 UTC = 06:00 ART, todos los dias
+  workflow_dispatch:       # ...y a mano desde la pestaña Actions
+
+permissions:
+  contents: write          # para commitear la base y los JSON actualizados
+
+concurrency:
+  group: ingesta           # nunca dos ingestas escribiendo la base a la vez
+  cancel-in-progress: false
+
+jobs:
+  ingesta:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.13"
+          cache: pip
+
+      - name: Instalar dependencias
+        run: pip install -r requirements.txt
+
+      - name: Migrar el esquema
+        # Idempotente (CREATE ... IF NOT EXISTS). Sirve para crear la base la
+        # primera vez y para aplicar tablas nuevas en las corridas siguientes.
+        run: python init_db.py
+
+      - name: Correr la ingesta
+        # Sin --incluir-experimentales: deuda y gasto tienen el parseo sin
+        # confirmar y no queremos que un job desatendido meta datos no
+        # verificados en la base. Ver docs/PIPELINES.md.
+        run: python actualizar.py
+
+      - name: Commitear si hay datos nuevos
+        run: |
+          git config user.name  "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add observatorio.db data/
+          if git diff --staged --quiet; then
+            echo "Sin cambios: ninguna fuente publico datos nuevos."
+          else
+            git commit -m "Ingesta automatica: $(date -u +%Y-%m-%d)"
+            git push
+          fi
+
+      - name: Reportar el estado de cada pipeline
+        # Corre aun si la ingesta fallo, para que el log muestre que se rompio.
+        if: always()
+        run: |
+          python - <<'PY'
+          import sqlite3
+          conn = sqlite3.connect("observatorio.db")
+          conn.row_factory = sqlite3.Row
+          for r in conn.execute("SELECT * FROM ultima_ingesta ORDER BY pipeline"):
+              print(f"{r['pipeline']:10} {r['estado']:6} {r['filas_nuevas']:>5} filas  {r['inicio']}")
+              if r["mensaje"]:
+                  print(r["mensaje"])
+          PY

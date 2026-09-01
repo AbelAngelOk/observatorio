@@ -1,0 +1,479 @@
+{
+  "indicador": "Exportaciones totales (FOB)",
+  "unidad": "millones de USD",
+  "metodologia": "INDEC via API (74.2_IET_0_T_16). Trimestral.",
+  "fuente": "API de series de tiempo",
+  "tipo_acceso_fuente": "api",
+  "datos": [
+    {
+      "fecha": "2003-03-31",
+      "valor": 6575.088868,
+      "provisorio": false
+    },
+    {
+      "fecha": "2003-06-30",
+      "valor": 8456.043972,
+      "provisorio": false
+    },
+    {
+      "fecha": "2003-09-30",
+      "valor": 7550.967353,
+      "provisorio": false
+    },
+    {
+      "fecha": "2003-12-31",
+      "valor": 7356.652422,
+      "provisorio": false
+    },
+    {
+      "fecha": "2004-03-31",
+      "valor": 7375.059561,
+      "provisorio": false
+    },
+    {
+      "fecha": "2004-06-30",
+      "valor": 9384.838672,
+      "provisorio": false
+    },
+    {
+      "fecha": "2004-09-30",
+      "valor": 8981.178726,
+      "provisorio": false
+    },
+    {
+      "fecha": "2004-12-31",
+      "valor": 8834.656743,
+      "provisorio": false
+    },
+    {
+      "fecha": "2005-03-31",
+      "valor": 8441.796695,
+      "provisorio": false
+    },
+    {
+      "fecha": "2005-06-30",
+      "valor": 10706.340906,
+      "provisorio": false
+    },
+    {
+      "fecha": "2005-09-30",
+      "valor": 10921.297084,
+      "provisorio": false
+    },
+    {
+      "fecha": "2005-12-31",
+      "valor": 10317.332406,
+      "provisorio": false
+    },
+    {
+      "fecha": "2006-03-31",
+      "valor": 9925.469867,
+      "provisorio": false
+    },
+    {
+      "fecha": "2006-06-30",
+      "valor": 11954.405493,
+      "provisorio": false
+    },
+    {
+      "fecha": "2006-09-30",
+      "valor": 12111.136437,
+      "provisorio": false
+    },
+    {
+      "fecha": "2006-12-31",
+      "valor": 12555.190968,
+      "provisorio": false
+    },
+    {
+      "fecha": "2007-03-31",
+      "valor": 11149.473932710003,
+      "provisorio": false
+    },
+    {
+      "fecha": "2007-06-30",
+      "valor": 13675.493849130004,
+      "provisorio": false
+    },
+    {
+      "fecha": "2007-09-30",
+      "valor": 14363.697576709998,
+      "provisorio": false
+    },
+    {
+      "fecha": "2007-12-31",
+      "valor": 16791.643227089997,
+      "provisorio": false
+    },
+    {
+      "fecha": "2008-03-31",
+      "valor": 16034.830732719998,
+      "provisorio": false
+    },
+    {
+      "fecha": "2008-06-30",
+      "valor": 17492.976804979997,
+      "provisorio": false
+    },
+    {
+      "fecha": "2008-09-30",
+      "valor": 21295.944111810008,
+      "provisorio": false
+    },
+    {
+      "fecha": "2008-12-31",
+      "valor": 15195.087782620005,
+      "provisorio": false
+    },
+    {
+      "fecha": "2009-03-31",
+      "valor": 11923.191701309996,
+      "provisorio": false
+    },
+    {
+      "fecha": "2009-06-30",
+      "valor": 15466.961563939998,
+      "provisorio": false
+    },
+    {
+      "fecha": "2009-09-30",
+      "valor": 13807.347670960004,
+      "provisorio": false
+    },
+    {
+      "fecha": "2009-12-31",
+      "valor": 14474.595699920004,
+      "provisorio": false
+    },
+    {
+      "fecha": "2010-03-31",
+      "valor": 13054.60181716,
+      "provisorio": false
+    },
+    {
+      "fecha": "2010-06-30",
+      "valor": 19080.10729165,
+      "provisorio": false
+    },
+    {
+      "fecha": "2010-09-30",
+      "valor": 18741.777128169997,
+      "provisorio": false
+    },
+    {
+      "fecha": "2010-12-31",
+      "valor": 17297.960812440004,
+      "provisorio": false
+    },
+    {
+      "fecha": "2011-03-31",
+      "valor": 16681.255014399998,
+      "provisorio": false
+    },
+    {
+      "fecha": "2011-06-30",
+      "valor": 22792.72637048999,
+      "provisorio": false
+    },
+    {
+      "fecha": "2011-09-30",
+      "valor": 23272.263216320003,
+      "provisorio": false
+    },
+    {
+      "fecha": "2011-12-31",
+      "valor": 20234.846680710005,
+      "provisorio": false
+    },
+    {
+      "fecha": "2012-03-31",
+      "valor": 17603.783482930005,
+      "provisorio": false
+    },
+    {
+      "fecha": "2012-06-30",
+      "valor": 20617.954716710003,
+      "provisorio": false
+    },
+    {
+      "fecha": "2012-09-30",
+      "valor": 21909.345371410003,
+      "provisorio": false
+    },
+    {
+      "fecha": "2012-12-31",
+      "valor": 19851.30431716,
+      "provisorio": false
+    },
+    {
+      "fecha": "2013-03-31",
+      "valor": 16448.85685315,
+      "provisorio": false
+    },
+    {
+      "fecha": "2013-06-30",
+      "valor": 22772.02897647,
+      "provisorio": false
+    },
+    {
+      "fecha": "2013-09-30",
+      "valor": 20675.000959379995,
+      "provisorio": false
+    },
+    {
+      "fecha": "2013-12-31",
+      "valor": 16067.094572070006,
+      "provisorio": false
+    },
+    {
+      "fecha": "2014-03-31",
+      "valor": 13836.0,
+      "provisorio": false
+    },
+    {
+      "fecha": "2014-06-30",
+      "valor": 20862.0,
+      "provisorio": false
+    },
+    {
+      "fecha": "2014-09-30",
+      "valor": 18522.0,
+      "provisorio": false
+    },
+    {
+      "fecha": "2014-12-31",
+      "valor": 15185.0,
+      "provisorio": false
+    },
+    {
+      "fecha": "2015-03-31",
+      "valor": 12049.0,
+      "provisorio": false
+    },
+    {
+      "fecha": "2015-06-30",
+      "valor": 16407.0,
+      "provisorio": false
+    },
+    {
+      "fecha": "2015-09-30",
+      "valor": 15867.0,
+      "provisorio": false
+    },
+    {
+      "fecha": "2015-12-31",
+      "valor": 12461.0,
+      "provisorio": false
+    },
+    {
+      "fecha": "2016-03-31",
+      "valor": 12444.0,
+      "provisorio": false
+    },
+    {
+      "fecha": "2016-06-30",
+      "valor": 15427.0,
+      "provisorio": false
+    },
+    {
+      "fecha": "2016-09-30",
+      "valor": 15803.0,
+      "provisorio": false
+    },
+    {
+      "fecha": "2016-12-31",
+      "valor": 14205.0,
+      "provisorio": false
+    },
+    {
+      "fecha": "2017-03-31",
+      "valor": 12753.0,
+      "provisorio": false
+    },
+    {
+      "fecha": "2017-06-30",
+      "valor": 15512.0,
+      "provisorio": false
+    },
+    {
+      "fecha": "2017-09-30",
+      "valor": 15831.0,
+      "provisorio": false
+    },
+    {
+      "fecha": "2017-12-31",
+      "valor": 14525.0,
+      "provisorio": false
+    },
+    {
+      "fecha": "2018-03-31",
+      "valor": 14531.0,
+      "provisorio": false
+    },
+    {
+      "fecha": "2018-06-30",
+      "valor": 15512.0,
+      "provisorio": false
+    },
+    {
+      "fecha": "2018-09-30",
+      "valor": 15654.0,
+      "provisorio": false
+    },
+    {
+      "fecha": "2018-12-31",
+      "valor": 16084.0,
+      "provisorio": false
+    },
+    {
+      "fecha": "2019-03-31",
+      "valor": 14170.0,
+      "provisorio": false
+    },
+    {
+      "fecha": "2019-06-30",
+      "valor": 16620.0,
+      "provisorio": false
+    },
+    {
+      "fecha": "2019-09-30",
+      "valor": 17170.0,
+      "provisorio": false
+    },
+    {
+      "fecha": "2019-12-31",
+      "valor": 17156.0,
+      "provisorio": false
+    },
+    {
+      "fecha": "2020-03-31",
+      "valor": 13340.0,
+      "provisorio": false
+    },
+    {
+      "fecha": "2020-06-30",
+      "valor": 14213.0,
+      "provisorio": false
+    },
+    {
+      "fecha": "2020-09-30",
+      "valor": 14613.0,
+      "provisorio": false
+    },
+    {
+      "fecha": "2020-12-31",
+      "valor": 12718.0,
+      "provisorio": false
+    },
+    {
+      "fecha": "2021-03-31",
+      "valor": 15407.0,
+      "provisorio": false
+    },
+    {
+      "fecha": "2021-06-30",
+      "valor": 19966.0,
+      "provisorio": false
+    },
+    {
+      "fecha": "2021-09-30",
+      "valor": 22921.0,
+      "provisorio": false
+    },
+    {
+      "fecha": "2021-12-31",
+      "valor": 19641.0,
+      "provisorio": false
+    },
+    {
+      "fecha": "2022-03-31",
+      "valor": 19354.0,
+      "provisorio": false
+    },
+    {
+      "fecha": "2022-06-30",
+      "valor": 25024.0,
+      "provisorio": false
+    },
+    {
+      "fecha": "2022-09-30",
+      "valor": 22864.0,
+      "provisorio": false
+    },
+    {
+      "fecha": "2022-12-31",
+      "valor": 21203.0,
+      "provisorio": false
+    },
+    {
+      "fecha": "2023-03-31",
+      "valor": 15899.10000119,
+      "provisorio": false
+    },
+    {
+      "fecha": "2023-06-30",
+      "valor": 17575.02320871,
+      "provisorio": false
+    },
+    {
+      "fecha": "2023-09-30",
+      "valor": 17721.3041703,
+      "provisorio": false
+    },
+    {
+      "fecha": "2023-12-31",
+      "valor": 15593.088606050002,
+      "provisorio": false
+    },
+    {
+      "fecha": "2024-03-31",
+      "valor": 17454.42190402,
+      "provisorio": false
+    },
+    {
+      "fecha": "2024-06-30",
+      "valor": 20745.05590429,
+      "provisorio": false
+    },
+    {
+      "fecha": "2024-09-30",
+      "valor": 20896.45745509,
+      "provisorio": false
+    },
+    {
+      "fecha": "2024-12-31",
+      "valor": 20607.27145885,
+      "provisorio": false
+    },
+    {
+      "fecha": "2025-03-31",
+      "valor": 18696.89907247,
+      "provisorio": false
+    },
+    {
+      "fecha": "2025-06-30",
+      "valor": 21044.77430868,
+      "provisorio": false
+    },
+    {
+      "fecha": "2025-09-30",
+      "valor": 23791.75008201,
+      "provisorio": false
+    },
+    {
+      "fecha": "2025-12-31",
+      "valor": 23577.77335487,
+      "provisorio": false
+    },
+    {
+      "fecha": "2026-03-31",
+      "valor": 21905.72019199,
+      "provisorio": false
+    },
+    {
+      "fecha": "2026-06-30",
+      "valor": 27548.742491670004,
+      "provisorio": false
+    }
+  ]
+}
