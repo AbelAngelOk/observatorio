@@ -1462,7 +1462,17 @@
     },
     {
       "fecha": "2026-06-30",
-      "valor": 1439.2199,
+      "valor": 1483.0198,
+      "provisorio": false
+    },
+    {
+      "fecha": "2026-07-31",
+      "valor": 1488.4531,
+      "provisorio": false
+    },
+    {
+      "fecha": "2026-08-31",
+      "valor": 1494.1268,
       "provisorio": false
     }
   ]
