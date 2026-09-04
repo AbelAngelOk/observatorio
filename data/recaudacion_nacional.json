@@ -1599,6 +1599,11 @@
       "fecha": "2026-07-31",
       "valor": 22965441.454087183,
       "provisorio": false
+    },
+    {
+      "fecha": "2026-08-31",
+      "valor": 20508537.35224407,
+      "provisorio": false
     }
   ]
 }
