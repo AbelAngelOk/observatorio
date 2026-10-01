@@ -949,6 +949,11 @@
       "fecha": "2026-09-30",
       "valor": 1551.59,
       "provisorio": false
+    },
+    {
+      "fecha": "2026-10-31",
+      "valor": 1560.0,
+      "provisorio": false
     }
   ]
 }
