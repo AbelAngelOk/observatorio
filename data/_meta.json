@@ -1,5 +1,5 @@
 {
-  "ultima_ingesta_ok": "2026-10-10T14:56:56.445271+00:00",
+  "ultima_ingesta_ok": "2026-10-11T15:13:15.426410+00:00",
   "pipelines": [
     {
       "pipeline": "cartera",
@@ -9,9 +9,9 @@
     },
     {
       "pipeline": "cotizaciones",
-      "inicio": "2026-10-10T14:56:34.109029+00:00",
+      "inicio": "2026-10-11T15:13:08.229229+00:00",
       "estado": "ok",
-      "filas_nuevas": 0
+      "filas_nuevas": 107
     },
     {
       "pipeline": "deuda",
@@ -33,7 +33,7 @@
     },
     {
       "pipeline": "fiscal",
-      "inicio": "2026-10-10T14:56:38.527316+00:00",
+      "inicio": "2026-10-11T15:13:12.084373+00:00",
       "estado": "ok",
       "filas_nuevas": 0
     },
@@ -45,19 +45,19 @@
     },
     {
       "pipeline": "recaudacion",
-      "inicio": "2026-10-10T14:56:56.445271+00:00",
+      "inicio": "2026-10-11T15:13:15.426410+00:00",
       "estado": "ok",
       "filas_nuevas": 0
     },
     {
       "pipeline": "reservas",
-      "inicio": "2026-10-10T14:56:06.809573+00:00",
+      "inicio": "2026-10-11T15:12:59.409683+00:00",
       "estado": "ok",
       "filas_nuevas": 0
     },
     {
       "pipeline": "sector_externo",
-      "inicio": "2026-10-10T14:56:34.136379+00:00",
+      "inicio": "2026-10-11T15:13:08.251741+00:00",
       "estado": "ok",
       "filas_nuevas": 0
     }
