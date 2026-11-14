@@ -952,7 +952,12 @@
     },
     {
       "fecha": "2026-10-31",
-      "valor": 1548.57,
+      "valor": 1556.59,
+      "provisorio": false
+    },
+    {
+      "fecha": "2026-11-30",
+      "valor": 1561.0,
       "provisorio": false
     }
   ]

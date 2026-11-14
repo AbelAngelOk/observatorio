@@ -1609,6 +1609,11 @@
       "fecha": "2026-09-30",
       "valor": 21358917.537041426,
       "provisorio": false
+    },
+    {
+      "fecha": "2026-10-31",
+      "valor": 21608201.31640371,
+      "provisorio": false
     }
   ]
 }
